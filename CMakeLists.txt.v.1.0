@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.15)
+project(AeronExample)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Aeron 경로
+#set(AERON_INSTALL_DIR "/home/hesed/aeron/install")
+set(AERON_INSTALL_DIR "/home/hesed/aeron")
+
+# Include 디렉토리
+include_directories(
+    ${AERON_INSTALL_DIR}/include/aeron
+    ${AERON_INSTALL_DIR}/include/wrapper
+    ${AERON_INSTALL_DIR}/include/wrapper/client/archive
+    ${CMAKE_SOURCE_DIR}/common/include
+)
+
+# 라이브러리 디렉토리
+link_directories(${AERON_INSTALL_DIR}/lib)
+
+# 서브디렉토리
+add_subdirectory(common)
+add_subdirectory(publisher)
+add_subdirectory(subscriber)

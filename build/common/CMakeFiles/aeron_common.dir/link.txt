@@ -1,0 +1,2 @@
+/usr/bin/ar qc libaeron_common.a CMakeFiles/aeron_common.dir/src/Logger.cpp.o CMakeFiles/aeron_common.dir/src/AeronConfig.cpp.o
+/usr/bin/ranlib libaeron_common.a

@@ -1,0 +1,211 @@
+#include "AeronPublisher.h"
+#include "AeronConfig.h"
+#include <iostream>
+#include <thread>
+#include <chrono>
+#include <cstring>
+
+namespace aeron {
+namespace example {
+
+AeronPublisher::AeronPublisher()
+    : running_(false)
+    , message_count_(0) {
+}
+
+AeronPublisher::~AeronPublisher() {
+    shutdown();
+}
+
+bool AeronPublisher::initialize() {
+    try {
+        std::cout << "Initializing Publisher..." << std::endl;
+        
+        // Aeron Context 설정
+        context_ = std::make_shared<aeron::Context>();
+        context_->aeronDir(AeronConfig::AERON_DIR);
+        
+        // Aeron 인스턴스 생성
+        aeron_ = aeron::Aeron::connect(*context_);
+        std::cout << "Connected to Aeron" << std::endl;
+        
+        // Publication 생성 (멀티캐스트)
+        std::int64_t publication_id = aeron_->addPublication(
+            AeronConfig::PUBLICATION_CHANNEL,
+            AeronConfig::PUBLICATION_STREAM_ID
+        );
+        
+        std::cout << "Publication added with registration ID: " << publication_id << std::endl;
+        
+        // Publication이 사용 가능할 때까지 대기
+        publication_ = aeron_->findPublication(publication_id);
+        while (!publication_) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            publication_ = aeron_->findPublication(publication_id);
+        }
+        
+        std::cout << "Publication ready: " << AeronConfig::PUBLICATION_CHANNEL 
+                  << ", streamId: " << AeronConfig::PUBLICATION_STREAM_ID << std::endl;
+        
+        // Archive Context 설정
+        archive_context_ = std::make_shared<aeron::archive::client::Context>();
+        archive_context_->aeron(aeron_);
+        archive_context_->controlRequestChannel(AeronConfig::ARCHIVE_CONTROL_REQUEST_CHANNEL);
+        archive_context_->controlResponseChannel(AeronConfig::ARCHIVE_CONTROL_RESPONSE_CHANNEL);
+        
+        // Archive 연결
+        archive_ = aeron::archive::client::AeronArchive::connect(*archive_context_);
+        std::cout << "Connected to Archive" << std::endl;
+        
+        // Recording Controller 생성
+        recording_controller_ = std::make_unique<RecordingController>(
+            archive_,
+            AeronConfig::PUBLICATION_CHANNEL,
+            AeronConfig::PUBLICATION_STREAM_ID
+        );
+        
+        running_ = true;
+        std::cout << "Publisher initialized successfully" << std::endl;
+        
+        return true;
+        
+    } catch (const aeron::util::SourcedException& e) {
+        std::cerr << "Failed to initialize Publisher: " << e.what() 
+                  << " at " << e.where() << std::endl;
+        return false;
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to initialize Publisher: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+bool AeronPublisher::publish(const uint8_t* buffer, size_t length) {
+    if (!running_ || !publication_) {
+        return false;
+    }
+    
+    // AtomicBuffer로 래핑
+    aeron::concurrent::AtomicBuffer atomic_buffer(
+        const_cast<uint8_t*>(buffer), 
+        length
+    );
+    
+    std::int64_t result = publication_->offer(atomic_buffer, 0, length);
+    
+    if (result > 0) {
+        // 성공 - result는 새로운 stream position
+        message_count_++;
+        return true;
+    }
+    
+    // 에러 처리 (음수 값)
+    if (result == aeron::BACK_PRESSURED) {
+        // Back pressure - 일시적, 재시도 가능
+        return false;
+    } else if (result == aeron::NOT_CONNECTED) {
+        // Publication이 subscriber에 연결되지 않음
+        return false;
+    } else if (result == aeron::ADMIN_ACTION) {
+        // Admin action
+        return false;
+    } else if (result == aeron::MAX_POSITION_EXCEEDED) {
+        // 최대 position 초과
+        std::cerr << "Max position exceeded" << std::endl;
+        return false;
+    } else {
+        // 기타 에러
+        if (message_count_ % 1000 == 0) {
+            std::cerr << "Offer failed with result: " << result << std::endl;
+        }
+        return false;
+    }
+}
+
+bool AeronPublisher::startRecording() {
+    if (!recording_controller_) {
+        std::cerr << "Recording controller not initialized" << std::endl;
+        return false;
+    }
+    return recording_controller_->startRecording();
+}
+
+bool AeronPublisher::stopRecording() {
+    if (!recording_controller_) {
+        std::cerr << "Recording controller not initialized" << std::endl;
+        return false;
+    }
+    return recording_controller_->stopRecording();
+}
+
+bool AeronPublisher::isRecording() const {
+    return recording_controller_ && recording_controller_->isRecording();
+}
+
+void AeronPublisher::run() {
+    std::cout << "Publisher running. Type 'start' to begin recording, "
+              << "'stop' to end recording, 'quit' to exit." << std::endl;
+    
+    // 메시지 발행 스레드
+    std::thread publish_thread([this]() {
+        int counter = 0;
+        while (running_) {
+            char message[256];
+            auto now = std::chrono::system_clock::now().time_since_epoch();
+            auto timestamp = std::chrono::duration_cast<std::chrono::nanoseconds>(now).count();
+            
+            snprintf(message, sizeof(message), 
+                    "Message %d at %lld", 
+                    counter++, 
+                    timestamp);
+            
+            if (publish(reinterpret_cast<const uint8_t*>(message), strlen(message))) {
+                if (message_count_ % 1000 == 0) {
+                    std::cout << "Published " << message_count_ << " messages. "
+                              << "Recording: " << (isRecording() ? "ON" : "OFF") << std::endl;
+                }
+            }
+            
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+    });
+    
+    // 사용자 명령 처리
+    std::string command;
+    while (running_) {
+        std::cin >> command;
+        
+        if (command == "start") {
+            startRecording();
+        } else if (command == "stop") {
+            stopRecording();
+        } else if (command == "quit") {
+            running_ = false;
+            break;
+        } else {
+            std::cout << "Unknown command. Use: start, stop, quit" << std::endl;
+        }
+    }
+    
+    publish_thread.join();
+}
+
+void AeronPublisher::shutdown() {
+    std::cout << "Shutting down Publisher..." << std::endl;
+    
+    running_ = false;
+    
+    if (recording_controller_ && recording_controller_->isRecording()) {
+        recording_controller_->stopRecording();
+    }
+    
+    recording_controller_.reset();
+    publication_.reset();
+    archive_.reset();
+    aeron_.reset();
+    
+    std::cout << "Publisher shutdown complete. Total messages: " << message_count_ << std::endl;
+}
+
+} // namespace example
+} // namespace aeron
+
