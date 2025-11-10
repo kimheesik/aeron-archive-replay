@@ -11,9 +11,27 @@
 namespace aeron {
 namespace example {
 
+struct PublisherConfig {
+    std::string aeron_dir;
+    std::string publication_channel;
+    int publication_stream_id;
+    std::string archive_control_request_channel;
+    std::string archive_control_response_channel;
+    int message_interval_ms;
+
+    PublisherConfig()
+        : aeron_dir("/dev/shm/aeron")
+        , publication_channel("aeron:udp?endpoint=localhost:40456")
+        , publication_stream_id(10)
+        , archive_control_request_channel("aeron:udp?endpoint=localhost:8010")
+        , archive_control_response_channel("aeron:udp?endpoint=localhost:0")
+        , message_interval_ms(100)
+    {}
+};
+
 class AeronPublisher {
 public:
-    AeronPublisher();
+    AeronPublisher(const PublisherConfig& config);
     ~AeronPublisher();
     
     bool initialize();
@@ -25,14 +43,16 @@ public:
     void shutdown();
 
 private:
+    PublisherConfig config_;
+
     std::shared_ptr<aeron::Context> context_;
     std::shared_ptr<aeron::Aeron> aeron_;
     std::shared_ptr<aeron::Publication> publication_;
-    
-    std::shared_ptr<aeron::archive::client::Context> archive_context_;      // ✅ client 추가
-    std::shared_ptr<aeron::archive::client::AeronArchive> archive_;         // ✅ client 추가
+
+    std::shared_ptr<aeron::archive::client::Context> archive_context_;
+    std::shared_ptr<aeron::archive::client::AeronArchive> archive_;
     std::unique_ptr<RecordingController> recording_controller_;
-    
+
     std::atomic<bool> running_;
     int64_t message_count_;
 };

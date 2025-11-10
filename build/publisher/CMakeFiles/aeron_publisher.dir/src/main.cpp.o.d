@@ -275,4 +275,5 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: \
  /usr/include/bits/sigcontext.h /usr/include/bits/types/stack_t.h \
  /usr/include/sys/ucontext.h /usr/include/bits/sigstack.h \
  /usr/include/bits/ss_flags.h /usr/include/bits/types/struct_sigstack.h \
- /usr/include/bits/sigthread.h
+ /usr/include/bits/sigthread.h /usr/include/getopt.h \
+ /usr/include/bits/getopt_core.h /usr/include/bits/getopt_ext.h

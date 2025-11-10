@@ -9,7 +9,7 @@ namespace example {
 class AeronConfig {
 public:
     // Aeron 디렉토리
-    static constexpr const char* AERON_DIR = "/dev/shm/aeron";
+    static constexpr const char* AERON_DIR = "/home/hesed/shm/aeron";
     
     // Archive Control 채널 (Host1)
     static constexpr const char* ARCHIVE_CONTROL_REQUEST_CHANNEL = 
@@ -23,23 +23,19 @@ public:
     static constexpr const char* ARCHIVE_REPLICATION_CHANNEL = 
         "aeron:udp?endpoint=localhost:0";
     
-    // Publication 채널 (멀티캐스트)
-    static constexpr const char* PUBLICATION_CHANNEL = 
-        "aeron:udp?endpoint=224.0.1.1:40456|interface=172.31.33.179";
-//        "aeron:udp?endpoint=224.0.1.1:40456|interface=127.0.0.1";
-//        "aeron:udp?endpoint=224.0.1.1:40456|interface=0.0.0.0";
+    // Publication 채널 (유니캐스트 - 테스트용)
+    static constexpr const char* PUBLICATION_CHANNEL =
+        "aeron:udp?endpoint=localhost:40456";
     static constexpr int PUBLICATION_STREAM_ID = 10;
-    
+
     // Live Subscription 채널
-    static constexpr const char* SUBSCRIPTION_CHANNEL = 
-        "aeron:udp?endpoint=224.0.1.1:40456|interface=172.31.33.179";
-//        "aeron:udp?endpoint=224.0.1.1:40456|interface=127.0.0.1";
-//        "aeron:udp?endpoint=224.0.1.1:40456|interface=0.0.0.0";
+    static constexpr const char* SUBSCRIPTION_CHANNEL =
+        "aeron:udp?endpoint=localhost:40456";
     static constexpr int SUBSCRIPTION_STREAM_ID = 10;
     
     // Replay 채널
-    static constexpr const char* REPLAY_CHANNEL = 
-        "aeron:udp?endpoint=localhost:0";
+    static constexpr const char* REPLAY_CHANNEL =
+        "aeron:udp?endpoint=localhost:40457";
     static constexpr int REPLAY_STREAM_ID = 20;
     
     // 타임아웃

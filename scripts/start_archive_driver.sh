@@ -22,6 +22,8 @@ mkdir -p ${ARCHIVE_DIR}
 
 # ArchivingMediaDriver 실행
 java -cp ${AERON_JAR} \
+  --add-opens java.base/jdk.internal.misc=ALL-UNNAMED \
+  --add-opens java.base/sun.nio.ch=ALL-UNNAMED \
   -Daeron.dir=${AERON_DIR} \
   -Daeron.archive.dir=${ARCHIVE_DIR} \
   -Daeron.archive.control.channel=aeron:udp?endpoint=localhost:8010 \

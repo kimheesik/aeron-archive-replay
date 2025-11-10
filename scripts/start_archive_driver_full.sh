@@ -1,8 +1,8 @@
 #!/bin/bash
 
 AERON_JAR="/home/hesed/aeron/bin/aeron-all-1.50.0-SNAPSHOT.jar"
-AERON_DIR="/dev/shm/aeron"
-ARCHIVE_DIR="/home/hesed/aeron-archive"
+AERON_DIR="/home/hesed/shm/aeron"
+ARCHIVE_DIR="/home/hesed/shm/aeron-archive"
 
 echo "=========================================="
 echo "Starting Aeron ArchivingMediaDriver"

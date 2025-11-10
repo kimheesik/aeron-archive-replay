@@ -8,8 +8,9 @@
 namespace aeron {
 namespace example {
 
-AeronPublisher::AeronPublisher()
-    : running_(false)
+AeronPublisher::AeronPublisher(const PublisherConfig& config)
+    : config_(config)
+    , running_(false)
     , message_count_(0) {
 }
 
@@ -20,57 +21,61 @@ AeronPublisher::~AeronPublisher() {
 bool AeronPublisher::initialize() {
     try {
         std::cout << "Initializing Publisher..." << std::endl;
-        
+        std::cout << "  Aeron dir: " << config_.aeron_dir << std::endl;
+        std::cout << "  Publication channel: " << config_.publication_channel << std::endl;
+        std::cout << "  Publication stream ID: " << config_.publication_stream_id << std::endl;
+        std::cout << "  Archive control: " << config_.archive_control_request_channel << std::endl;
+
         // Aeron Context 설정
         context_ = std::make_shared<aeron::Context>();
-        context_->aeronDir(AeronConfig::AERON_DIR);
-        
+        context_->aeronDir(config_.aeron_dir);
+
         // Aeron 인스턴스 생성
         aeron_ = aeron::Aeron::connect(*context_);
         std::cout << "Connected to Aeron" << std::endl;
-        
-        // Publication 생성 (멀티캐스트)
+
+        // Publication 생성
         std::int64_t publication_id = aeron_->addPublication(
-            AeronConfig::PUBLICATION_CHANNEL,
-            AeronConfig::PUBLICATION_STREAM_ID
+            config_.publication_channel,
+            config_.publication_stream_id
         );
-        
+
         std::cout << "Publication added with registration ID: " << publication_id << std::endl;
-        
+
         // Publication이 사용 가능할 때까지 대기
         publication_ = aeron_->findPublication(publication_id);
         while (!publication_) {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
             publication_ = aeron_->findPublication(publication_id);
         }
-        
-        std::cout << "Publication ready: " << AeronConfig::PUBLICATION_CHANNEL 
-                  << ", streamId: " << AeronConfig::PUBLICATION_STREAM_ID << std::endl;
-        
+
+        std::cout << "Publication ready: " << config_.publication_channel
+                  << ", streamId: " << config_.publication_stream_id << std::endl;
+
         // Archive Context 설정
         archive_context_ = std::make_shared<aeron::archive::client::Context>();
         archive_context_->aeron(aeron_);
-        archive_context_->controlRequestChannel(AeronConfig::ARCHIVE_CONTROL_REQUEST_CHANNEL);
-        archive_context_->controlResponseChannel(AeronConfig::ARCHIVE_CONTROL_RESPONSE_CHANNEL);
-        
+        archive_context_->controlRequestChannel(config_.archive_control_request_channel);
+        archive_context_->controlResponseChannel(config_.archive_control_response_channel);
+
         // Archive 연결
         archive_ = aeron::archive::client::AeronArchive::connect(*archive_context_);
         std::cout << "Connected to Archive" << std::endl;
-        
+
         // Recording Controller 생성
         recording_controller_ = std::make_unique<RecordingController>(
             archive_,
-            AeronConfig::PUBLICATION_CHANNEL,
-            AeronConfig::PUBLICATION_STREAM_ID
+            config_.publication_channel,
+            config_.publication_stream_id
         );
-        
+
         running_ = true;
         std::cout << "Publisher initialized successfully" << std::endl;
-        
+
         return true;
-        
+
     } catch (const aeron::util::SourcedException& e) {
-        std::cerr << "Failed to initialize Publisher: " << e.what() 
+        std::cerr << "Failed to initialize Publisher: " << e.what()
                   << " at " << e.where() << std::endl;
         return false;
     } catch (const std::exception& e) {
@@ -164,8 +169,8 @@ void AeronPublisher::run() {
                               << "Recording: " << (isRecording() ? "ON" : "OFF") << std::endl;
                 }
             }
-            
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(config_.message_interval_ms));
         }
     });
     
