@@ -97,19 +97,35 @@ common/CMakeFiles/aeron_common.dir/src/AeronConfig.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/aeron_common.dir/src/AeronConfig.cpp.s"
 	cd /home/hesed/devel/aeron/build/common && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hesed/devel/aeron/common/src/AeronConfig.cpp -o CMakeFiles/aeron_common.dir/src/AeronConfig.cpp.s
 
+common/CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.o: common/CMakeFiles/aeron_common.dir/flags.make
+common/CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.o: /home/hesed/devel/aeron/common/src/ConfigLoader.cpp
+common/CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.o: common/CMakeFiles/aeron_common.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object common/CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.o"
+	cd /home/hesed/devel/aeron/build/common && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT common/CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.o -MF CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.o.d -o CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.o -c /home/hesed/devel/aeron/common/src/ConfigLoader.cpp
+
+common/CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.i"
+	cd /home/hesed/devel/aeron/build/common && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hesed/devel/aeron/common/src/ConfigLoader.cpp > CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.i
+
+common/CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.s"
+	cd /home/hesed/devel/aeron/build/common && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hesed/devel/aeron/common/src/ConfigLoader.cpp -o CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.s
+
 # Object files for target aeron_common
 aeron_common_OBJECTS = \
 "CMakeFiles/aeron_common.dir/src/Logger.cpp.o" \
-"CMakeFiles/aeron_common.dir/src/AeronConfig.cpp.o"
+"CMakeFiles/aeron_common.dir/src/AeronConfig.cpp.o" \
+"CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.o"
 
 # External object files for target aeron_common
 aeron_common_EXTERNAL_OBJECTS =
 
 common/libaeron_common.a: common/CMakeFiles/aeron_common.dir/src/Logger.cpp.o
 common/libaeron_common.a: common/CMakeFiles/aeron_common.dir/src/AeronConfig.cpp.o
+common/libaeron_common.a: common/CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.o
 common/libaeron_common.a: common/CMakeFiles/aeron_common.dir/build.make
 common/libaeron_common.a: common/CMakeFiles/aeron_common.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX static library libaeron_common.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX static library libaeron_common.a"
 	cd /home/hesed/devel/aeron/build/common && $(CMAKE_COMMAND) -P CMakeFiles/aeron_common.dir/cmake_clean_target.cmake
 	cd /home/hesed/devel/aeron/build/common && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/aeron_common.dir/link.txt --verbose=$(VERBOSE)
 

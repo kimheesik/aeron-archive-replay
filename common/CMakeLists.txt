@@ -2,12 +2,14 @@
 set(COMMON_SOURCES
     src/Logger.cpp
     src/AeronConfig.cpp
+    src/ConfigLoader.cpp
 )
 
 # 헤더 파일 정의 (선택사항, 명시적으로 표시)
 set(COMMON_HEADERS
     include/Logger.h
     include/AeronConfig.h
+    include/ConfigLoader.h
 )
 
 # Static 라이브러리 생성

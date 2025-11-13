@@ -132,12 +132,12 @@ subscriber/clean: subscriber/CMakeFiles/aeron_subscriber.dir/clean
 common/CMakeFiles/aeron_common.dir/all:
 	$(MAKE) $(MAKESILENT) -f common/CMakeFiles/aeron_common.dir/build.make common/CMakeFiles/aeron_common.dir/depend
 	$(MAKE) $(MAKESILENT) -f common/CMakeFiles/aeron_common.dir/build.make common/CMakeFiles/aeron_common.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=1,2,3 "Built target aeron_common"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=1,2,3,4 "Built target aeron_common"
 .PHONY : common/CMakeFiles/aeron_common.dir/all
 
 # Build rule for subdir invocation for target.
 common/CMakeFiles/aeron_common.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 common/CMakeFiles/aeron_common.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 0
 .PHONY : common/CMakeFiles/aeron_common.dir/rule
@@ -158,12 +158,12 @@ common/CMakeFiles/aeron_common.dir/clean:
 publisher/CMakeFiles/aeron_publisher.dir/all: common/CMakeFiles/aeron_common.dir/all
 	$(MAKE) $(MAKESILENT) -f publisher/CMakeFiles/aeron_publisher.dir/build.make publisher/CMakeFiles/aeron_publisher.dir/depend
 	$(MAKE) $(MAKESILENT) -f publisher/CMakeFiles/aeron_publisher.dir/build.make publisher/CMakeFiles/aeron_publisher.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=4,5,6,7 "Built target aeron_publisher"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=5,6,7,8 "Built target aeron_publisher"
 .PHONY : publisher/CMakeFiles/aeron_publisher.dir/all
 
 # Build rule for subdir invocation for target.
 publisher/CMakeFiles/aeron_publisher.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 publisher/CMakeFiles/aeron_publisher.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 0
 .PHONY : publisher/CMakeFiles/aeron_publisher.dir/rule
@@ -184,12 +184,12 @@ publisher/CMakeFiles/aeron_publisher.dir/clean:
 subscriber/CMakeFiles/aeron_subscriber.dir/all: common/CMakeFiles/aeron_common.dir/all
 	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/depend
 	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=8,9,10,11 "Built target aeron_subscriber"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=9,10,11,12 "Built target aeron_subscriber"
 .PHONY : subscriber/CMakeFiles/aeron_subscriber.dir/all
 
 # Build rule for subdir invocation for target.
 subscriber/CMakeFiles/aeron_subscriber.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 subscriber/CMakeFiles/aeron_subscriber.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 0
 .PHONY : subscriber/CMakeFiles/aeron_subscriber.dir/rule

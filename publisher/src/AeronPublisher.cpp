@@ -72,6 +72,16 @@ bool AeronPublisher::initialize() {
         running_ = true;
         std::cout << "Publisher initialized successfully" << std::endl;
 
+        // Auto-record 옵션이 활성화되어 있으면 자동으로 recording 시작
+        if (config_.auto_record) {
+            std::cout << "Auto-record enabled. Starting recording..." << std::endl;
+            if (startRecording()) {
+                std::cout << "Recording started automatically" << std::endl;
+            } else {
+                std::cerr << "Failed to start auto-recording" << std::endl;
+            }
+        }
+
         return true;
 
     } catch (const aeron::util::SourcedException& e) {

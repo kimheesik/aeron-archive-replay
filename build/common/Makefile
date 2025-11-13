@@ -154,6 +154,30 @@ src/AeronConfig.cpp.s:
 	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f common/CMakeFiles/aeron_common.dir/build.make common/CMakeFiles/aeron_common.dir/src/AeronConfig.cpp.s
 .PHONY : src/AeronConfig.cpp.s
 
+src/ConfigLoader.o: src/ConfigLoader.cpp.o
+.PHONY : src/ConfigLoader.o
+
+# target to build an object file
+src/ConfigLoader.cpp.o:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f common/CMakeFiles/aeron_common.dir/build.make common/CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.o
+.PHONY : src/ConfigLoader.cpp.o
+
+src/ConfigLoader.i: src/ConfigLoader.cpp.i
+.PHONY : src/ConfigLoader.i
+
+# target to preprocess a source file
+src/ConfigLoader.cpp.i:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f common/CMakeFiles/aeron_common.dir/build.make common/CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.i
+.PHONY : src/ConfigLoader.cpp.i
+
+src/ConfigLoader.s: src/ConfigLoader.cpp.s
+.PHONY : src/ConfigLoader.s
+
+# target to generate assembly for a file
+src/ConfigLoader.cpp.s:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f common/CMakeFiles/aeron_common.dir/build.make common/CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.s
+.PHONY : src/ConfigLoader.cpp.s
+
 src/Logger.o: src/Logger.cpp.o
 .PHONY : src/Logger.o
 
@@ -190,6 +214,9 @@ help:
 	@echo "... src/AeronConfig.o"
 	@echo "... src/AeronConfig.i"
 	@echo "... src/AeronConfig.s"
+	@echo "... src/ConfigLoader.o"
+	@echo "... src/ConfigLoader.i"
+	@echo "... src/ConfigLoader.s"
 	@echo "... src/Logger.o"
 	@echo "... src/Logger.i"
 	@echo "... src/Logger.s"

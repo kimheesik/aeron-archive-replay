@@ -91,27 +91,54 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/AeronSubscriber.cpp.o: /home/hese
   /home/hesed/devel/aeron/subscriber/include/AeronSubscriber.h \
   /home/hesed/devel/aeron/subscriber/include/ReplayToLiveHandler.h \
   /usr/include/alloca.h \
+  /usr/include/asm-generic/bitsperlong.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
+  /usr/include/asm-generic/int-ll64.h \
+  /usr/include/asm-generic/posix_types.h \
+  /usr/include/asm-generic/types.h \
+  /usr/include/asm/bitsperlong.h \
   /usr/include/asm/errno.h \
+  /usr/include/asm/posix_types.h \
+  /usr/include/asm/posix_types_64.h \
+  /usr/include/asm/types.h \
   /usr/include/assert.h \
   /usr/include/bits/byteswap.h \
+  /usr/include/bits/confname.h \
   /usr/include/bits/cpu-set.h \
   /usr/include/bits/endian.h \
+  /usr/include/bits/environments.h \
   /usr/include/bits/errno.h \
   /usr/include/bits/floatn-common.h \
   /usr/include/bits/floatn.h \
+  /usr/include/bits/getopt_core.h \
+  /usr/include/bits/getopt_posix.h \
   /usr/include/bits/libc-header-start.h \
   /usr/include/bits/local_lim.h \
   /usr/include/bits/locale.h \
   /usr/include/bits/long-double.h \
   /usr/include/bits/posix1_lim.h \
   /usr/include/bits/posix2_lim.h \
+  /usr/include/bits/posix_opt.h \
   /usr/include/bits/pthreadtypes-arch.h \
   /usr/include/bits/pthreadtypes.h \
   /usr/include/bits/sched.h \
   /usr/include/bits/select.h \
   /usr/include/bits/setjmp.h \
+  /usr/include/bits/sigaction.h \
+  /usr/include/bits/sigcontext.h \
+  /usr/include/bits/sigevent-consts.h \
+  /usr/include/bits/siginfo-arch.h \
+  /usr/include/bits/siginfo-consts-arch.h \
+  /usr/include/bits/siginfo-consts.h \
+  /usr/include/bits/signum-generic.h \
+  /usr/include/bits/signum.h \
+  /usr/include/bits/sigstack.h \
+  /usr/include/bits/sigthread.h \
+  /usr/include/bits/ss_flags.h \
+  /usr/include/bits/stat.h \
+  /usr/include/bits/statx-generic.h \
+  /usr/include/bits/statx.h \
   /usr/include/bits/stdint-intn.h \
   /usr/include/bits/stdint-uintn.h \
   /usr/include/bits/stdio_lim.h \
@@ -128,16 +155,25 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/AeronSubscriber.cpp.o: /home/hese
   /usr/include/bits/types/__locale_t.h \
   /usr/include/bits/types/__mbstate_t.h \
   /usr/include/bits/types/__sigset_t.h \
+  /usr/include/bits/types/__sigval_t.h \
   /usr/include/bits/types/clock_t.h \
   /usr/include/bits/types/clockid_t.h \
   /usr/include/bits/types/cookie_io_functions_t.h \
   /usr/include/bits/types/error_t.h \
   /usr/include/bits/types/locale_t.h \
   /usr/include/bits/types/mbstate_t.h \
+  /usr/include/bits/types/sig_atomic_t.h \
+  /usr/include/bits/types/sigevent_t.h \
+  /usr/include/bits/types/siginfo_t.h \
   /usr/include/bits/types/sigset_t.h \
+  /usr/include/bits/types/sigval_t.h \
+  /usr/include/bits/types/stack_t.h \
   /usr/include/bits/types/struct_FILE.h \
   /usr/include/bits/types/struct_itimerspec.h \
   /usr/include/bits/types/struct_sched_param.h \
+  /usr/include/bits/types/struct_sigstack.h \
+  /usr/include/bits/types/struct_statx.h \
+  /usr/include/bits/types/struct_statx_timestamp.h \
   /usr/include/bits/types/struct_timespec.h \
   /usr/include/bits/types/struct_timeval.h \
   /usr/include/bits/types/struct_tm.h \
@@ -320,9 +356,14 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/AeronSubscriber.cpp.o: /home/hese
   /usr/include/limits.h \
   /usr/include/linux/errno.h \
   /usr/include/linux/limits.h \
+  /usr/include/linux/posix_types.h \
+  /usr/include/linux/stat.h \
+  /usr/include/linux/stddef.h \
+  /usr/include/linux/types.h \
   /usr/include/locale.h \
   /usr/include/pthread.h \
   /usr/include/sched.h \
+  /usr/include/signal.h \
   /usr/include/stdc-predef.h \
   /usr/include/stdint.h \
   /usr/include/stdio.h \
@@ -331,8 +372,12 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/AeronSubscriber.cpp.o: /home/hese
   /usr/include/strings.h \
   /usr/include/sys/cdefs.h \
   /usr/include/sys/select.h \
+  /usr/include/sys/stat.h \
   /usr/include/sys/types.h \
+  /usr/include/sys/ucontext.h \
+  /usr/include/sys/wait.h \
   /usr/include/time.h \
+  /usr/include/unistd.h \
   /usr/include/wchar.h \
   /usr/include/wctype.h \
   /usr/lib/gcc/x86_64-redhat-linux/8/include/limits.h \
@@ -766,6 +811,7 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
   /home/hesed/aeron/include/util/Platform.h \
   /home/hesed/aeron/include/util/ScopeUtils.h \
   /home/hesed/aeron/include/util/StringUtil.h \
+  /home/hesed/devel/aeron/common/include/ConfigLoader.h \
   /home/hesed/devel/aeron/subscriber/include/AeronSubscriber.h \
   /home/hesed/devel/aeron/subscriber/include/ReplayToLiveHandler.h \
   /usr/include/alloca.h \
@@ -779,6 +825,8 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
   /usr/include/bits/errno.h \
   /usr/include/bits/floatn-common.h \
   /usr/include/bits/floatn.h \
+  /usr/include/bits/getopt_core.h \
+  /usr/include/bits/getopt_ext.h \
   /usr/include/bits/libc-header-start.h \
   /usr/include/bits/local_lim.h \
   /usr/include/bits/locale.h \
@@ -921,10 +969,13 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
   /usr/include/c++/8/bits/stl_iterator.h \
   /usr/include/c++/8/bits/stl_iterator_base_funcs.h \
   /usr/include/c++/8/bits/stl_iterator_base_types.h \
+  /usr/include/c++/8/bits/stl_map.h \
+  /usr/include/c++/8/bits/stl_multimap.h \
   /usr/include/c++/8/bits/stl_pair.h \
   /usr/include/c++/8/bits/stl_raw_storage_iter.h \
   /usr/include/c++/8/bits/stl_relops.h \
   /usr/include/c++/8/bits/stl_tempbuf.h \
+  /usr/include/c++/8/bits/stl_tree.h \
   /usr/include/c++/8/bits/stl_uninitialized.h \
   /usr/include/c++/8/bits/stl_vector.h \
   /usr/include/c++/8/bits/stream_iterator.h \
@@ -975,6 +1026,7 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
   /usr/include/c++/8/iterator \
   /usr/include/c++/8/limits \
   /usr/include/c++/8/locale \
+  /usr/include/c++/8/map \
   /usr/include/c++/8/memory \
   /usr/include/c++/8/mutex \
   /usr/include/c++/8/new \
@@ -1011,6 +1063,7 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
   /usr/include/endian.h \
   /usr/include/errno.h \
   /usr/include/features.h \
+  /usr/include/getopt.h \
   /usr/include/gnu/stubs-64.h \
   /usr/include/gnu/stubs.h \
   /usr/include/libintl.h \
@@ -1041,41 +1094,19 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
   /usr/lib/gcc/x86_64-redhat-linux/8/include/syslimits.h
 
 
-/usr/include/sys/ucontext.h:
+/usr/include/getopt.h:
 
-/usr/include/signal.h:
+/usr/include/c++/8/map:
 
 /usr/include/c++/8/csignal:
 
-/usr/include/bits/types/struct_sigstack.h:
+/usr/include/c++/8/bits/stl_tree.h:
 
-/usr/include/bits/types/sigval_t.h:
+/usr/include/c++/8/bits/stl_map.h:
 
-/usr/include/bits/types/siginfo_t.h:
+/usr/include/bits/getopt_ext.h:
 
-/usr/include/bits/types/sigevent_t.h:
-
-/usr/include/bits/types/sig_atomic_t.h:
-
-/usr/include/bits/types/__sigval_t.h:
-
-/usr/include/bits/ss_flags.h:
-
-/usr/include/bits/sigthread.h:
-
-/usr/include/bits/sigstack.h:
-
-/usr/include/bits/signum-generic.h:
-
-/usr/include/bits/siginfo-consts.h:
-
-/usr/include/bits/siginfo-consts-arch.h:
-
-/usr/include/bits/siginfo-arch.h:
-
-/usr/include/bits/sigevent-consts.h:
-
-/usr/include/bits/sigcontext.h:
+/home/hesed/devel/aeron/common/include/ConfigLoader.h:
 
 /home/hesed/devel/aeron/subscriber/src/main.cpp:
 
@@ -1083,53 +1114,83 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/lib/gcc/x86_64-redhat-linux/8/include/stddef.h:
 
-/usr/include/c++/8/bits/atomic_lockfree_defines.h:
-
-/usr/include/c++/8/istream:
-
-/usr/include/c++/8/atomic:
-
-/usr/include/c++/8/bits/ptr_traits.h:
-
-/usr/include/c++/8/x86_64-redhat-linux/bits/c++locale.h:
-
-/usr/include/c++/8/algorithm:
-
-/usr/include/bits/wctype-wchar.h:
-
-/usr/include/bits/wchar.h:
-
-/usr/include/c++/8/bits/invoke.h:
-
-/usr/include/bits/typesizes.h:
-
 /usr/lib/gcc/x86_64-redhat-linux/8/include/stdarg.h:
 
-/usr/include/bits/types/wint_t.h:
+/usr/include/wctype.h:
 
-/usr/include/bits/types/timer_t.h:
+/usr/include/wchar.h:
 
-/usr/include/bits/types/struct_tm.h:
+/usr/include/time.h:
+
+/usr/include/sys/ucontext.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/sys/stat.h:
+
+/usr/include/strings.h:
+
+/usr/include/string.h:
+
+/usr/include/stdio.h:
+
+/usr/include/stdc-predef.h:
+
+/usr/include/signal.h:
+
+/usr/include/locale.h:
+
+/usr/include/linux/types.h:
+
+/usr/include/linux/stddef.h:
+
+/usr/include/linux/stat.h:
+
+/usr/include/linux/limits.h:
+
+/usr/include/limits.h:
+
+/usr/include/unistd.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/features.h:
+
+/usr/include/errno.h:
+
+/usr/lib/gcc/x86_64-redhat-linux/8/include/stdint.h:
+
+/usr/include/c++/8/x86_64-redhat-linux/bits/time_members.h:
+
+/usr/include/c++/8/x86_64-redhat-linux/bits/os_defines.h:
+
+/usr/include/c++/8/x86_64-redhat-linux/bits/gthr.h:
+
+/usr/include/c++/8/x86_64-redhat-linux/bits/ctype_inline.h:
+
+/usr/include/c++/8/x86_64-redhat-linux/bits/ctype_base.h:
+
+/usr/include/c++/8/cerrno:
+
+/usr/include/bits/types/siginfo_t.h:
+
+/usr/include/bits/types/sigevent_t.h:
+
+/usr/include/bits/types/sig_atomic_t.h:
 
 /usr/include/bits/types/clock_t.h:
 
 /home/hesed/aeron/include/concurrent/SleepingIdleStrategy.h:
 
-/usr/include/c++/8/bits/atomic_base.h:
-
-/usr/include/strings.h:
-
-/usr/include/c++/8/limits:
-
-/usr/include/c++/8/cerrno:
+/usr/include/bits/types/struct_tm.h:
 
 /usr/include/bits/types/__sigset_t.h:
 
 /usr/include/bits/types/__mbstate_t.h:
 
-/usr/include/c++/8/bits/streambuf_iterator.h:
+/usr/include/asm/posix_types_64.h:
 
-/usr/include/bits/types/__fpos_t.h:
+/usr/include/c++/8/bits/streambuf_iterator.h:
 
 /usr/include/bits/types/__fpos64_t.h:
 
@@ -1139,19 +1200,39 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/bits/wordsize.h:
 
-/usr/include/bits/waitstatus.h:
-
-/usr/include/c++/8/bits/exception_ptr.h:
-
-/usr/include/bits/errno.h:
-
-/usr/include/c++/8/bits/locale_facets_nonio.tcc:
-
 /usr/include/bits/uio_lim.h:
 
 /usr/include/bits/stdint-intn.h:
 
 /home/hesed/aeron/include/command/CounterUpdateFlyweight.h:
+
+/usr/include/bits/sigthread.h:
+
+/usr/include/bits/statx-generic.h:
+
+/usr/include/bits/stat.h:
+
+/usr/include/bits/statx.h:
+
+/usr/include/bits/ss_flags.h:
+
+/usr/include/bits/sigstack.h:
+
+/home/hesed/aeron/include/command/PublicationBuffersReadyFlyweight.h:
+
+/usr/include/bits/siginfo-consts-arch.h:
+
+/usr/include/bits/posix_opt.h:
+
+/home/hesed/aeron/include/client/RecordingDescriptorPoller.h:
+
+/usr/include/bits/types/__fpos_t.h:
+
+/usr/include/bits/sigcontext.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/bits/select.h:
 
 /usr/include/bits/sched.h:
 
@@ -1163,19 +1244,31 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/bits/local_lim.h:
 
-/usr/include/c++/8/bits/allocator.h:
+/usr/include/bits/confname.h:
 
-/usr/include/c++/8/functional:
+/usr/include/bits/siginfo-consts.h:
+
+/usr/include/bits/getopt_core.h:
+
+/usr/include/c++/8/bits/algorithmfwd.h:
+
+/usr/include/c++/8/bits/sstream.tcc:
+
+/usr/include/bits/signum-generic.h:
 
 /usr/include/bits/cpu-set.h:
 
-/usr/include/bits/select.h:
+/usr/include/asm/types.h:
 
-/usr/include/bits/byteswap.h:
+/usr/include/bits/siginfo-arch.h:
 
-/usr/include/bits/types/stack_t.h:
+/home/hesed/aeron/include/Aeron.h:
 
-/usr/include/asm/errno.h:
+/home/hesed/aeron/include/util/Export.h:
+
+/usr/include/c++/8/bits/exception_ptr.h:
+
+/usr/include/asm/posix_types.h:
 
 /usr/include/c++/8/bits/unordered_map.h:
 
@@ -1183,9 +1276,7 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/iterator:
 
-/usr/include/c++/8/bits/shared_ptr.h:
-
-/usr/include/asm-generic/errno-base.h:
+/usr/include/asm-generic/types.h:
 
 /usr/include/c++/8/bits/cpp_type_traits.h:
 
@@ -1193,9 +1284,13 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /home/hesed/aeron/include/concurrent/Atomic64.h:
 
-/home/hesed/aeron/include/ChannelUri.h:
+/usr/include/asm-generic/posix_types.h:
 
-/usr/include/bits/types/locale_t.h:
+/usr/include/sched.h:
+
+/usr/include/c++/8/bits/predefined_ops.h:
+
+/usr/include/c++/8/chrono:
 
 /home/hesed/aeron/include/util/MemoryMappedFile.h:
 
@@ -1205,13 +1300,11 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /home/hesed/devel/aeron/subscriber/include/ReplayToLiveHandler.h:
 
-/usr/include/c++/8/bits/string_view.tcc:
+/usr/include/c++/8/x86_64-redhat-linux/bits/messages_members.h:
 
-/usr/include/gnu/stubs.h:
+/usr/include/bits/signum.h:
 
-/usr/include/bits/types/struct_timeval.h:
-
-/home/hesed/aeron/include/util/Index.h:
+/home/hesed/aeron/include/util/LangUtil.h:
 
 /home/hesed/aeron/include/command/ErrorResponseFlyweight.h:
 
@@ -1219,9 +1312,13 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/bits/types/mbstate_t.h:
 
-/usr/include/c++/8/bits/alloc_traits.h:
+/usr/include/bits/getopt_posix.h:
 
-/usr/include/limits.h:
+/usr/include/c++/8/bits/exception.h:
+
+/usr/include/ctype.h:
+
+/usr/include/c++/8/debug/debug.h:
 
 /home/hesed/aeron/include/concurrent/CountersManager.h:
 
@@ -1231,9 +1328,15 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/bits/cxxabi_init_exception.h:
 
-/usr/include/c++/8/bits/algorithmfwd.h:
+/usr/include/sys/cdefs.h:
 
-/usr/include/c++/8/bits/sstream.tcc:
+/usr/include/bits/sys_errlist.h:
+
+/usr/include/sys/select.h:
+
+/home/hesed/aeron/include/HeartbeatTimestamp.h:
+
+/usr/include/sys/wait.h:
 
 /usr/include/c++/8/cwctype:
 
@@ -1249,25 +1352,25 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /home/hesed/aeron/include/command/ClientTimeoutFlyweight.h:
 
+/usr/include/stdlib.h:
+
+/home/hesed/aeron/include/concurrent/logbuffer/TermReader.h:
+
 /usr/include/bits/types/clockid_t.h:
 
-/home/hesed/aeron/include/client/RecordingDescriptorPoller.h:
+/usr/include/stdint.h:
+
+/home/hesed/aeron/include/util/StringUtil.h:
 
 /usr/include/c++/8/utility:
 
 /home/hesed/aeron/include/CncFileDescriptor.h:
 
-/usr/include/c++/8/bits/shared_ptr_atomic.h:
+/usr/include/c++/8/bits/stl_iterator_base_types.h:
 
-/usr/include/c++/8/bits/stl_function.h:
-
-/usr/include/c++/8/x86_64-redhat-linux/bits/os_defines.h:
-
-/usr/include/features.h:
+/home/hesed/aeron/include/client/ArchiveConfiguration.h:
 
 /home/hesed/aeron/include/command/CorrelatedMessageFlyweight.h:
-
-/home/hesed/aeron/include/command/PublicationBuffersReadyFlyweight.h:
 
 /home/hesed/aeron/include/concurrent/logbuffer/FrameDescriptor.h:
 
@@ -1276,14 +1379,6 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 /usr/include/c++/8/bits/basic_string.tcc:
 
 /home/hesed/aeron/include/concurrent/status/Position.h:
-
-/usr/include/c++/8/backward/binders.h:
-
-/usr/include/bits/types/struct_itimerspec.h:
-
-/usr/include/bits/sys_errlist.h:
-
-/usr/include/sys/cdefs.h:
 
 /usr/include/bits/time.h:
 
@@ -1299,21 +1394,7 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /home/hesed/aeron/include/ClientConductor.h:
 
-/usr/include/bits/types/time_t.h:
-
-/usr/include/bits/types/struct_FILE.h:
-
-/home/hesed/devel/aeron/subscriber/src/ReplayToLiveHandler.cpp:
-
-/usr/include/c++/8/bits/hashtable_policy.h:
-
-/home/hesed/aeron/include/client/AeronArchive.h:
-
 /home/hesed/aeron/include/concurrent/logbuffer/DataFrameHeader.h:
-
-/home/hesed/aeron/include/command/OperationSucceededFlyweight.h:
-
-/usr/include/c++/8/array:
 
 /usr/include/bits/pthreadtypes-arch.h:
 
@@ -1325,12 +1406,6 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /home/hesed/aeron/include/command/DestinationMessageFlyweight.h:
 
-/home/hesed/aeron/include/Aeron.h:
-
-/home/hesed/aeron/include/util/Export.h:
-
-/usr/include/stdio.h:
-
 /home/hesed/aeron/include/DriverProxy.h:
 
 /usr/include/alloca.h:
@@ -1339,21 +1414,11 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/ios:
 
-/usr/include/string.h:
-
-/usr/include/c++/8/bits/basic_ios.h:
-
-/usr/include/c++/8/bits/unique_ptr.h:
-
-/usr/include/c++/8/bits/allocated_ptr.h:
+/usr/include/asm/bitsperlong.h:
 
 /usr/include/bits/waitflags.h:
 
 /home/hesed/aeron/include/command/TerminateDriverFlyweight.h:
-
-/home/hesed/aeron/include/command/Flyweight.h:
-
-/usr/include/c++/8/bits/basic_ios.tcc:
 
 /home/hesed/aeron/include/concurrent/CountersReader.h:
 
@@ -1373,25 +1438,45 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/sstream:
 
-/usr/include/c++/8/debug/debug.h:
-
-/usr/include/ctype.h:
-
-/usr/include/linux/errno.h:
-
 /usr/include/bits/sigaction.h:
 
 /home/hesed/aeron/include/client/ArchiveProxy.h:
 
-/usr/include/bits/uintn-identity.h:
+/usr/include/bits/types/__sigval_t.h:
+
+/usr/include/endian.h:
+
+/usr/include/assert.h:
+
+/usr/include/bits/types/wint_t.h:
+
+/usr/include/libintl.h:
+
+/usr/include/c++/8/iosfwd:
+
+/usr/include/asm-generic/bitsperlong.h:
 
 /usr/include/c++/8/bits/stl_relops.h:
+
+/usr/include/c++/8/array:
+
+/home/hesed/aeron/include/command/OperationSucceededFlyweight.h:
+
+/usr/include/bits/wchar.h:
+
+/usr/include/c++/8/bits/invoke.h:
 
 /usr/include/c++/8/bits/stringfwd.h:
 
 /home/hesed/aeron/include/command/PublicationMessageFlyweight.h:
 
-/home/hesed/aeron/include/command/RemoveMessageFlyweight.h:
+/usr/include/c++/8/bits/locale_facets_nonio.tcc:
+
+/usr/include/bits/errno.h:
+
+/usr/include/c++/8/istream:
+
+/usr/include/bits/environments.h:
 
 /usr/include/c++/8/bits/uniform_int_dist.h:
 
@@ -1417,19 +1502,27 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /home/hesed/aeron/include/command/SubscriptionMessageFlyweight.h:
 
-/usr/include/c++/8/x86_64-redhat-linux/bits/ctype_base.h:
-
 /home/hesed/aeron/include/Context.h:
 
 /usr/include/bits/types/cookie_io_functions_t.h:
 
 /usr/include/c++/8/bits/istream.tcc:
 
+/usr/include/c++/8/cwchar:
+
+/usr/include/bits/types/__FILE.h:
+
 /home/hesed/aeron/include/concurrent/AtomicArrayUpdater.h:
 
 /usr/include/c++/8/bits/stl_iterator_base_funcs.h:
 
+/usr/include/linux/errno.h:
+
+/usr/include/asm-generic/int-ll64.h:
+
 /home/hesed/aeron/include/concurrent/AgentInvoker.h:
+
+/usr/include/bits/sigevent-consts.h:
 
 /home/hesed/aeron/include/client/ControlResponsePoller.h:
 
@@ -1465,9 +1558,9 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /home/hesed/aeron/include/concurrent/YieldingIdleStrategy.h:
 
-/usr/include/bits/types/struct_sched_param.h:
+/usr/include/gnu/stubs-64.h:
 
-/home/hesed/aeron/include/concurrent/ringbuffer/RecordDescriptor.h:
+/home/hesed/aeron/include/command/CounterMessageFlyweight.h:
 
 /usr/include/c++/8/bits/stl_deque.h:
 
@@ -1475,13 +1568,11 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/stdexcept:
 
+/usr/include/pthread.h:
+
+/usr/include/bits/long-double.h:
+
 /home/hesed/aeron/include/concurrent/logbuffer/HeaderWriter.h:
-
-/usr/include/bits/xopen_lim.h:
-
-/home/hesed/aeron/include/concurrent/logbuffer/TermBlockScanner.h:
-
-/usr/include/c++/8/climits:
 
 /home/hesed/aeron/include/concurrent/logbuffer/LogBufferDescriptor.h:
 
@@ -1489,7 +1580,23 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/iomanip:
 
+/home/hesed/aeron/include/concurrent/ringbuffer/RecordDescriptor.h:
+
+/usr/include/bits/types/struct_sched_param.h:
+
+/usr/include/bits/types/sigval_t.h:
+
 /home/hesed/aeron/include/util/ScopeUtils.h:
+
+/usr/include/c++/8/bits/string_view.tcc:
+
+/usr/include/bits/types/struct_statx.h:
+
+/usr/include/bits/types/locale_t.h:
+
+/home/hesed/aeron/include/ChannelUri.h:
+
+/usr/include/bits/waitstatus.h:
 
 /home/hesed/aeron/include/concurrent/atomic/Atomic64_gcc_x86_64.h:
 
@@ -1503,15 +1610,99 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/bits/stl_algobase.h:
 
-/usr/include/c++/8/bits/char_traits.h:
+/usr/include/asm/errno.h:
 
-/usr/include/wchar.h:
+/usr/include/bits/types/stack_t.h:
+
+/home/hesed/devel/aeron/subscriber/src/ReplayToLiveHandler.cpp:
+
+/home/hesed/aeron/include/client/AeronArchive.h:
+
+/usr/include/c++/8/bits/hashtable_policy.h:
+
+/usr/include/c++/8/backward/binders.h:
+
+/usr/include/bits/types/struct_itimerspec.h:
+
+/usr/include/bits/types/struct_sigstack.h:
+
+/home/hesed/aeron/include/command/RemoveMessageFlyweight.h:
+
+/usr/include/bits/types/struct_statx_timestamp.h:
+
+/usr/include/c++/8/mutex:
+
+/usr/include/c++/8/bits/stl_algo.h:
+
+/usr/include/c++/8/cstdint:
+
+/usr/include/bits/types/struct_timespec.h:
+
+/usr/include/c++/8/limits:
+
+/home/hesed/aeron/include/util/Index.h:
+
+/usr/include/bits/types/struct_timeval.h:
+
+/usr/include/c++/8/bits/atomic_base.h:
+
+/usr/include/bits/types/struct_FILE.h:
+
+/usr/include/bits/types/time_t.h:
+
+/usr/include/bits/types/timer_t.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/usr/include/c++/8/bits/shared_ptr.h:
+
+/usr/include/bits/uintn-identity.h:
+
+/usr/include/bits/wctype-wchar.h:
+
+/usr/include/bits/xopen_lim.h:
+
+/home/hesed/aeron/include/concurrent/logbuffer/TermBlockScanner.h:
+
+/usr/include/c++/8/climits:
+
+/usr/include/c++/8/algorithm:
+
+/usr/include/c++/8/atomic:
+
+/usr/include/c++/8/bits/ptr_traits.h:
+
+/usr/include/c++/8/x86_64-redhat-linux/bits/c++locale.h:
+
+/usr/include/c++/8/bits/alloc_traits.h:
+
+/usr/include/c++/8/bits/allocated_ptr.h:
+
+/usr/include/c++/8/functional:
+
+/usr/include/c++/8/bits/allocator.h:
+
+/usr/include/c++/8/bits/stl_function.h:
+
+/usr/include/c++/8/bits/shared_ptr_atomic.h:
+
+/usr/include/c++/8/bits/atomic_lockfree_defines.h:
+
+/usr/include/c++/8/bits/basic_ios.h:
+
+/usr/include/c++/8/bits/unique_ptr.h:
+
+/home/hesed/aeron/include/command/Flyweight.h:
+
+/usr/include/c++/8/bits/basic_ios.tcc:
+
+/usr/include/c++/8/bits/char_traits.h:
 
 /home/hesed/aeron/include/concurrent/broadcast/CopyBroadcastReceiver.h:
 
 /usr/include/c++/8/bits/concept_check.h:
-
-/usr/include/locale.h:
 
 /usr/include/c++/8/bits/deque.tcc:
 
@@ -1520,14 +1711,6 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 /usr/include/c++/8/bits/enable_special_members.h:
 
 /usr/include/c++/8/bits/stl_iterator.h:
-
-/usr/include/c++/8/bits/exception.h:
-
-/usr/include/stdc-predef.h:
-
-/home/hesed/aeron/include/HeartbeatTimestamp.h:
-
-/usr/include/sys/select.h:
 
 /usr/include/bits/types/error_t.h:
 
@@ -1573,6 +1756,8 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/bits/localefwd.h:
 
+/usr/include/c++/8/bits/stl_multimap.h:
+
 /usr/include/c++/8/bits/node_handle.h:
 
 /usr/include/c++/8/cstddef:
@@ -1587,9 +1772,9 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/bits/parse_numbers.h:
 
-/usr/include/c++/8/bits/basic_string.h:
-
 /home/hesed/aeron/include/command/SubscriptionReadyFlyweight.h:
+
+/usr/include/c++/8/bits/basic_string.h:
 
 /usr/include/c++/8/ext/type_traits.h:
 
@@ -1597,11 +1782,11 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/bits/postypes.h:
 
-/usr/include/sched.h:
+/usr/lib/gcc/x86_64-redhat-linux/8/include/limits.h:
 
-/usr/include/c++/8/bits/predefined_ops.h:
+/usr/include/bits/libc-header-start.h:
 
-/usr/include/c++/8/chrono:
+/usr/include/c++/8/bits/quoted_string.h:
 
 /usr/include/c++/8/bits/range_access.h:
 
@@ -1625,13 +1810,7 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/cassert:
 
-/home/hesed/aeron/include/client/ArchiveConfiguration.h:
-
-/usr/include/c++/8/bits/stl_iterator_base_types.h:
-
-/home/hesed/aeron/include/command/CounterMessageFlyweight.h:
-
-/usr/include/gnu/stubs-64.h:
+/usr/include/linux/posix_types.h:
 
 /usr/include/c++/8/bits/stl_pair.h:
 
@@ -1639,33 +1818,17 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/bits/stream_iterator.h:
 
-/usr/include/errno.h:
-
 /usr/include/c++/8/bits/uses_allocator.h:
 
 /usr/include/c++/8/cctype:
-
-/usr/include/bits/types/struct_timespec.h:
-
-/usr/include/c++/8/bits/stl_algo.h:
-
-/usr/include/c++/8/cstdint:
-
-/home/hesed/aeron/include/util/StringUtil.h:
-
-/usr/include/stdint.h:
 
 /usr/include/c++/8/cstdlib:
 
 /usr/include/c++/8/cstring:
 
-/usr/include/bits/types/__FILE.h:
-
-/usr/include/c++/8/cwchar:
+/usr/include/c++/8/x86_64-redhat-linux/bits/error_constants.h:
 
 /home/hesed/aeron/include/util/MacroUtil.h:
-
-/usr/include/c++/8/x86_64-redhat-linux/bits/error_constants.h:
 
 /usr/include/c++/8/deque:
 
@@ -1683,8 +1846,6 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 
 /usr/include/c++/8/initializer_list:
 
-/usr/include/c++/8/mutex:
-
 /usr/include/c++/8/new:
 
 /usr/include/c++/8/vector:
@@ -1692,6 +1853,10 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 /usr/include/c++/8/bits/stl_construct.h:
 
 /usr/include/c++/8/thread:
+
+/usr/include/c++/8/x86_64-redhat-linux/bits/gthr-default.h:
+
+/usr/include/c++/8/optional:
 
 /usr/include/c++/8/ostream:
 
@@ -1716,51 +1881,3 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: /home/hesed/devel/aer
 /usr/include/c++/8/x86_64-redhat-linux/bits/c++allocator.h:
 
 /usr/include/c++/8/x86_64-redhat-linux/bits/c++config.h:
-
-/usr/include/wctype.h:
-
-/usr/include/c++/8/x86_64-redhat-linux/bits/ctype_inline.h:
-
-/usr/include/c++/8/optional:
-
-/usr/include/c++/8/x86_64-redhat-linux/bits/gthr-default.h:
-
-/usr/include/c++/8/x86_64-redhat-linux/bits/gthr.h:
-
-/usr/include/bits/signum.h:
-
-/home/hesed/aeron/include/util/LangUtil.h:
-
-/usr/include/c++/8/x86_64-redhat-linux/bits/messages_members.h:
-
-/usr/lib/gcc/x86_64-redhat-linux/8/include/stdint.h:
-
-/usr/include/c++/8/x86_64-redhat-linux/bits/time_members.h:
-
-/usr/include/assert.h:
-
-/usr/include/endian.h:
-
-/usr/include/c++/8/iosfwd:
-
-/usr/include/libintl.h:
-
-/usr/include/linux/limits.h:
-
-/usr/include/bits/long-double.h:
-
-/usr/include/pthread.h:
-
-/home/hesed/aeron/include/concurrent/logbuffer/TermReader.h:
-
-/usr/include/stdlib.h:
-
-/usr/include/sys/types.h:
-
-/usr/include/time.h:
-
-/usr/include/bits/libc-header-start.h:
-
-/usr/include/c++/8/bits/quoted_string.h:
-
-/usr/lib/gcc/x86_64-redhat-linux/8/include/limits.h:

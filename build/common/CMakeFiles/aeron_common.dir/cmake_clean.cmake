@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/aeron_common.dir/src/AeronConfig.cpp.o"
   "CMakeFiles/aeron_common.dir/src/AeronConfig.cpp.o.d"
+  "CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.o"
+  "CMakeFiles/aeron_common.dir/src/ConfigLoader.cpp.o.d"
   "CMakeFiles/aeron_common.dir/src/Logger.cpp.o"
   "CMakeFiles/aeron_common.dir/src/Logger.cpp.o.d"
   "libaeron_common.a"

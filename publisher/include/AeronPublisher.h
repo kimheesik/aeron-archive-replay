@@ -18,6 +18,7 @@ struct PublisherConfig {
     std::string archive_control_request_channel;
     std::string archive_control_response_channel;
     int message_interval_ms;
+    bool auto_record;  // 자동으로 recording 시작
 
     PublisherConfig()
         : aeron_dir("/dev/shm/aeron")
@@ -26,6 +27,7 @@ struct PublisherConfig {
         , archive_control_request_channel("aeron:udp?endpoint=localhost:8010")
         , archive_control_response_channel("aeron:udp?endpoint=localhost:0")
         , message_interval_ms(100)
+        , auto_record(false)  // 기본값: 수동 recording
     {}
 };
 

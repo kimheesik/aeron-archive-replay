@@ -28,20 +28,104 @@ bool RecordingController::startRecording() {
         std::cerr << "Recording already started" << std::endl;
         return false;
     }
-    
+
     try {
-        std::cout << "Starting recording on channel: " << channel_ 
+        std::cout << "Starting recording on channel: " << channel_
                   << ", streamId: " << stream_id_ << std::endl;
-        
-        // Archive에 recording 시작 요청
-        // SourceLocation은 AeronArchive 클래스 내부에 정의되어 있을 가능성이 높음
-        subscription_id_ = archive_->startRecording(
+
+        // 먼저 기존 active recording이 있는지 확인
+        auto checkExistingRecording = [this](
+            std::int64_t controlSessionId,
+            std::int64_t correlationId,
+            std::int64_t recordingId,
+            std::int64_t startTimestamp,
+            std::int64_t stopTimestamp,
+            std::int64_t startPosition,
+            std::int64_t stopPosition,
+            std::int32_t initialTermId,
+            std::int32_t segmentFileLength,
+            std::int32_t termBufferLength,
+            std::int32_t mtuLength,
+            std::int32_t sessionId,
+            std::int32_t streamId,
+            const std::string& strippedChannel,
+            const std::string& originalChannel,
+            const std::string& sourceIdentity) {
+
+            if (streamId == this->stream_id_ && stopTimestamp == 0) {  // Active recording
+                this->recording_id_ = recordingId;
+                this->subscription_id_ = sessionId;
+                std::cout << "Found existing active recording ID: " << recordingId << std::endl;
+            }
+        };
+
+        // 기존 recording 확인
+        std::int32_t existingRecordingCount = archive_->listRecordingsForUri(
+            0,
+            10,
             channel_,
             stream_id_,
-            aeron::archive::client::AeronArchive::SourceLocation::LOCAL  // ✅ AeronArchive:: 추가
+            checkExistingRecording
         );
-        
-        std::cout << "Recording subscription created with ID: " << subscription_id_ << std::endl;
+
+        if (recording_id_ != -1) {
+            // 기존 active recording 발견
+            std::cout << "Using existing recording. ID: " << recording_id_ << std::endl;
+            return true;
+        }
+
+        // 기존 recording이 없으므로 새로 시작
+        try {
+            subscription_id_ = archive_->startRecording(
+                channel_,
+                stream_id_,
+                aeron::archive::client::AeronArchive::SourceLocation::LOCAL
+            );
+
+            std::cout << "Recording subscription created with ID: " << subscription_id_ << std::endl;
+        } catch (const std::exception& e) {
+            // "recording exists" 에러인 경우, 기존 recording을 다시 찾기
+            std::string error_msg = e.what();
+            if (error_msg.find("recording exists") != std::string::npos) {
+                std::cout << "Recording already exists, searching for existing recording..." << std::endl;
+
+                // 모든 recording (active와 stopped 포함) 검색
+                auto findAnyRecording = [this](
+                    std::int64_t controlSessionId,
+                    std::int64_t correlationId,
+                    std::int64_t recordingId,
+                    std::int64_t startTimestamp,
+                    std::int64_t stopTimestamp,
+                    std::int64_t startPosition,
+                    std::int64_t stopPosition,
+                    std::int32_t initialTermId,
+                    std::int32_t segmentFileLength,
+                    std::int32_t termBufferLength,
+                    std::int32_t mtuLength,
+                    std::int32_t sessionId,
+                    std::int32_t streamId,
+                    const std::string& strippedChannel,
+                    const std::string& originalChannel,
+                    const std::string& sourceIdentity) {
+
+                    if (streamId == this->stream_id_) {
+                        this->recording_id_ = recordingId;
+                        std::cout << "Found recording ID: " << recordingId
+                                  << (stopTimestamp == 0 ? " (active)" : " (stopped)") << std::endl;
+                    }
+                };
+
+                archive_->listRecordingsForUri(0, 10, channel_, stream_id_, findAnyRecording);
+
+                if (recording_id_ != -1) {
+                    std::cout << "Using existing recording. Messages will be recorded." << std::endl;
+                    return true;
+                }
+            }
+
+            // 다른 에러는 re-throw
+            throw;
+        }
         
         // Recording ID 얻기 (약간의 대기 필요)
         std::this_thread::sleep_for(std::chrono::milliseconds(200));

@@ -766,6 +766,7 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
   /home/hesed/aeron/include/util/Platform.h \
   /home/hesed/aeron/include/util/ScopeUtils.h \
   /home/hesed/aeron/include/util/StringUtil.h \
+  /home/hesed/devel/aeron/common/include/ConfigLoader.h \
   /home/hesed/devel/aeron/publisher/include/AeronPublisher.h \
   /home/hesed/devel/aeron/publisher/include/RecordingController.h \
   /usr/include/alloca.h \
@@ -779,6 +780,8 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
   /usr/include/bits/errno.h \
   /usr/include/bits/floatn-common.h \
   /usr/include/bits/floatn.h \
+  /usr/include/bits/getopt_core.h \
+  /usr/include/bits/getopt_ext.h \
   /usr/include/bits/libc-header-start.h \
   /usr/include/bits/local_lim.h \
   /usr/include/bits/locale.h \
@@ -921,10 +924,13 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
   /usr/include/c++/8/bits/stl_iterator.h \
   /usr/include/c++/8/bits/stl_iterator_base_funcs.h \
   /usr/include/c++/8/bits/stl_iterator_base_types.h \
+  /usr/include/c++/8/bits/stl_map.h \
+  /usr/include/c++/8/bits/stl_multimap.h \
   /usr/include/c++/8/bits/stl_pair.h \
   /usr/include/c++/8/bits/stl_raw_storage_iter.h \
   /usr/include/c++/8/bits/stl_relops.h \
   /usr/include/c++/8/bits/stl_tempbuf.h \
+  /usr/include/c++/8/bits/stl_tree.h \
   /usr/include/c++/8/bits/stl_uninitialized.h \
   /usr/include/c++/8/bits/stl_vector.h \
   /usr/include/c++/8/bits/stream_iterator.h \
@@ -975,6 +981,7 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
   /usr/include/c++/8/iterator \
   /usr/include/c++/8/limits \
   /usr/include/c++/8/locale \
+  /usr/include/c++/8/map \
   /usr/include/c++/8/memory \
   /usr/include/c++/8/mutex \
   /usr/include/c++/8/new \
@@ -1011,6 +1018,7 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
   /usr/include/endian.h \
   /usr/include/errno.h \
   /usr/include/features.h \
+  /usr/include/getopt.h \
   /usr/include/gnu/stubs-64.h \
   /usr/include/gnu/stubs.h \
   /usr/include/libintl.h \
@@ -1045,7 +1053,15 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
 
 /usr/include/signal.h:
 
+/usr/include/getopt.h:
+
+/usr/include/c++/8/map:
+
 /usr/include/c++/8/csignal:
+
+/usr/include/c++/8/bits/stl_tree.h:
+
+/usr/include/c++/8/bits/stl_map.h:
 
 /usr/include/bits/types/struct_sigstack.h:
 
@@ -1076,6 +1092,12 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
 /usr/include/bits/sigevent-consts.h:
 
 /usr/include/bits/sigcontext.h:
+
+/usr/include/bits/getopt_ext.h:
+
+/usr/include/bits/getopt_core.h:
+
+/home/hesed/devel/aeron/common/include/ConfigLoader.h:
 
 /home/hesed/devel/aeron/publisher/src/main.cpp:
 
@@ -1570,6 +1592,8 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
 /usr/include/c++/8/ext/atomicity.h:
 
 /usr/include/c++/8/bits/localefwd.h:
+
+/usr/include/c++/8/bits/stl_multimap.h:
 
 /usr/include/c++/8/bits/node_handle.h:
 
