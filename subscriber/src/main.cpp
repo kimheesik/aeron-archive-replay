@@ -17,28 +17,30 @@ void signalHandler(int signal) {
 void printUsage(const char* program_name) {
     std::cout << "Usage: " << program_name << " [OPTIONS]\n"
               << "\nOptions:\n"
-              << "  --config <file>              Load configuration from INI file\n"
-              << "  --aeron-dir <path>           Aeron directory (override config)\n"
-              << "  --embedded                   Use embedded MediaDriver (no external driver needed)\n"
-              << "  --archive-control <channel>  Archive control channel (override config)\n"
-              << "  --replay <position>          Start in replay mode from position\n"
-              << "  --print-config               Print current configuration and exit\n"
-              << "  -h, --help                   Show this help message\n"
+              << "  --config <file>                 Load configuration from INI file\n"
+              << "  --aeron-dir <path>              Aeron directory (override config)\n"
+              << "  --archive-control <channel>     Archive control channel (override config)\n"
+              << "  --replay-merge <recording_id>   Start ReplayMerge from specific recording ID\n"
+              << "  --replay-auto                   Auto-discover latest recording and replay\n"
+              << "  --position <pos>                Start position for ReplayMerge (default: 0)\n"
+              << "  --print-config                  Print current configuration and exit\n"
+              << "  -h, --help                      Show this help message\n"
+              << "\nNOTE: Embedded MediaDriver is now MANDATORY (always enabled)\n"
               << "\nExamples:\n"
-              << "  # Use config file with embedded driver\n"
-              << "  " << program_name << " --config config/aeron-local.ini --embedded\n"
+              << "  # Live mode (default)\n"
+              << "  " << program_name << " --config config/aeron-local.ini\n"
               << "\n"
-              << "  # Distributed setup (config file)\n"
-              << "  " << program_name << " --config config/aeron-distributed.ini --embedded\n"
+              << "  # Auto-discover latest recording and replay from start\n"
+              << "  " << program_name << " --config config/aeron-local.ini --replay-auto\n"
               << "\n"
-              << "  # Use default config with embedded driver\n"
-              << "  " << program_name << " --embedded\n"
+              << "  # Auto-discover with custom start position\n"
+              << "  " << program_name << " --config config/aeron-local.ini --replay-auto --position 1000\n"
               << "\n"
-              << "  # Replay mode from position 0\n"
-              << "  " << program_name << " --config config/aeron-local.ini --replay 0\n"
+              << "  # Manual ReplayMerge with specific recording ID\n"
+              << "  " << program_name << " --config config/aeron-local.ini --replay-merge 1\n"
               << "\n"
-              << "  # Override archive control channel\n"
-              << "  " << program_name << " --embedded --archive-control aeron:udp?endpoint=192.168.1.10:8010\n"
+              << "  # Distributed subscriber connecting to remote Publisher archive\n"
+              << "  " << program_name << " --config config/aeron-distributed.ini --archive-control aeron:udp?endpoint=192.168.1.10:8010 --replay-auto\n"
               << std::endl;
 }
 
@@ -49,21 +51,23 @@ int main(int argc, char* argv[]) {
     // 1. Config 로딩 (INI 파일 또는 기본값)
     std::string config_file;
     bool print_config_only = false;
-    bool replay_mode = false;
+    bool replay_merge_mode = false;
+    bool replay_auto_mode = false;   // NEW: Auto-discovery mode
+    int64_t recording_id = -1;
     int64_t start_position = 0;
 
     // CLI 옵션으로 override할 값들
     std::string override_aeron_dir;
-    bool use_embedded_driver = false;
     std::string override_archive_control;
 
     // 커맨드라인 옵션 정의
     static struct option long_options[] = {
         {"config",           required_argument, 0, 'f'},
         {"aeron-dir",        required_argument, 0, 'a'},
-        {"embedded",         no_argument,       0, 'e'},
         {"archive-control",  required_argument, 0, 'c'},
-        {"replay",           required_argument, 0, 'r'},
+        {"replay-merge",     required_argument, 0, 'r'},
+        {"replay-auto",      no_argument,       0, 'R'},  // NEW
+        {"position",         required_argument, 0, 'p'},
         {"print-config",     no_argument,       0, 'P'},
         {"help",             no_argument,       0, 'h'},
         {0, 0, 0, 0}
@@ -80,14 +84,17 @@ int main(int argc, char* argv[]) {
             case 'a':
                 override_aeron_dir = optarg;
                 break;
-            case 'e':
-                use_embedded_driver = true;
-                break;
             case 'c':
                 override_archive_control = optarg;
                 break;
             case 'r':
-                replay_mode = true;
+                replay_merge_mode = true;
+                recording_id = std::stoll(optarg);
+                break;
+            case 'R':  // NEW: Auto-discovery
+                replay_auto_mode = true;
+                break;
+            case 'p':
                 start_position = std::stoll(optarg);
                 break;
             case 'P':
@@ -100,6 +107,13 @@ int main(int argc, char* argv[]) {
                 printUsage(argv[0]);
                 return 1;
         }
+    }
+
+    // Validate options
+    if (replay_merge_mode && replay_auto_mode) {
+        std::cerr << "Error: Cannot use both --replay-merge and --replay-auto\n" << std::endl;
+        printUsage(argv[0]);
+        return 1;
     }
 
     // 2. Config 로드
@@ -138,22 +152,38 @@ int main(int argc, char* argv[]) {
     // 5. SubscriberConfig에 적용
     aeron::example::SubscriberConfig sub_config;
     sub_config.aeron_dir = aeron_settings.aeron_dir;
-    sub_config.use_embedded_driver = use_embedded_driver;
+    sub_config.use_embedded_driver = true;  // 항상 true (필수)
     sub_config.archive_control_channel = aeron_settings.archive_control_request_channel;
     sub_config.subscription_channel = aeron_settings.subscription_channel;
     sub_config.subscription_stream_id = aeron_settings.subscription_stream_id;
+    sub_config.replay_destination = aeron_settings.replay_channel;
 
     // 설정 요약 출력
     std::cout << "========================================" << std::endl;
     std::cout << "Subscriber Configuration" << std::endl;
     std::cout << "========================================" << std::endl;
     std::cout << "Aeron directory: " << sub_config.aeron_dir << std::endl;
-    std::cout << "Embedded driver: " << (sub_config.use_embedded_driver ? "YES" : "NO") << std::endl;
+    std::cout << "Embedded driver: ENABLED (mandatory)" << std::endl;
     std::cout << "Archive control: " << sub_config.archive_control_channel << std::endl;
-    std::cout << "Subscription channel: " << aeron_settings.subscription_channel << std::endl;
-    std::cout << "Mode: " << (replay_mode ? "REPLAY" : "LIVE") << std::endl;
-    if (replay_mode) {
+    std::cout << "Subscription channel: " << sub_config.subscription_channel << std::endl;
+
+    // Display mode
+    std::string mode_str = "LIVE";
+    if (replay_auto_mode) {
+        mode_str = "REPLAY_AUTO (auto-discovery)";
+    } else if (replay_merge_mode) {
+        mode_str = "REPLAY_MERGE";
+    }
+    std::cout << "Mode: " << mode_str << std::endl;
+
+    if (replay_merge_mode) {
+        std::cout << "Recording ID: " << recording_id << std::endl;
         std::cout << "Start position: " << start_position << std::endl;
+        std::cout << "Replay destination: " << sub_config.replay_destination << std::endl;
+    } else if (replay_auto_mode) {
+        std::cout << "Auto-discovery: ENABLED" << std::endl;
+        std::cout << "Start position: " << start_position << std::endl;
+        std::cout << "Replay destination: " << sub_config.replay_destination << std::endl;
     }
     std::cout << "========================================\n" << std::endl;
 
@@ -166,12 +196,21 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    if (replay_mode) {
-        if (!subscriber.startReplay(start_position)) {
-            std::cerr << "Failed to start replay" << std::endl;
+    // Start subscriber based on mode
+    if (replay_auto_mode) {
+        // Auto-discovery mode
+        if (!subscriber.startReplayMergeAuto(start_position)) {
+            std::cerr << "Failed to start ReplayMerge with auto-discovery" << std::endl;
+            return 1;
+        }
+    } else if (replay_merge_mode) {
+        // Manual recording ID mode
+        if (!subscriber.startReplayMerge(recording_id, start_position)) {
+            std::cerr << "Failed to start ReplayMerge" << std::endl;
             return 1;
         }
     } else {
+        // Live mode
         if (!subscriber.startLive()) {
             std::cerr << "Failed to start live" << std::endl;
             return 1;

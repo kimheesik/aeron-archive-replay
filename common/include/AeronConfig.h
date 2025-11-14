@@ -9,7 +9,8 @@ namespace example {
 class AeronConfig {
 public:
     // Aeron 디렉토리 (각 서버의 로컬)
-    static constexpr const char* AERON_DIR = "/dev/shm/aeron";
+    // /home/hesed/shm 사용 (/dev/shm 크기 제한 회피)
+    static constexpr const char* AERON_DIR = "/home/hesed/shm/aeron";
 
     // ========================================
     // Archive Control 채널

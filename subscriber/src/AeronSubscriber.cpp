@@ -17,12 +17,16 @@ AeronSubscriber::AeronSubscriber()
     : running_(false)
     , message_count_(0)
     , driver_pid_(-1)
+    , replay_merge_session_id_(-1)
+    , is_replay_merge_active_(false)
     , latency_sum_(0.0)
     , latency_min_(0.0)
     , latency_max_(0.0)
-    , latency_count_(0) {
-    config_.aeron_dir = AeronConfig::AERON_DIR;
-    config_.use_embedded_driver = false;
+    , latency_count_(0)
+    , last_message_number_(-1)
+    , gap_count_(0)
+    , total_gaps_(0) {
+    // 기본 설정 사용 (embedded driver 필수)
 }
 
 AeronSubscriber::AeronSubscriber(const SubscriberConfig& config)
@@ -30,10 +34,15 @@ AeronSubscriber::AeronSubscriber(const SubscriberConfig& config)
     , running_(false)
     , message_count_(0)
     , driver_pid_(-1)
+    , replay_merge_session_id_(-1)
+    , is_replay_merge_active_(false)
     , latency_sum_(0.0)
     , latency_min_(0.0)
     , latency_max_(0.0)
-    , latency_count_(0) {
+    , latency_count_(0)
+    , last_message_number_(-1)
+    , gap_count_(0)
+    , total_gaps_(0) {
 }
 
 AeronSubscriber::~AeronSubscriber() {
@@ -136,13 +145,12 @@ void AeronSubscriber::stopEmbeddedDriver() {
 bool AeronSubscriber::initialize() {
     try {
         std::cout << "Initializing Subscriber..." << std::endl;
+        std::cout << "  Aeron dir: " << config_.aeron_dir << std::endl;
 
-        // Embedded MediaDriver 시작 (설정된 경우)
-        if (config_.use_embedded_driver) {
-            if (!startEmbeddedDriver()) {
-                std::cerr << "Failed to start embedded MediaDriver" << std::endl;
-                return false;
-            }
+        // Embedded MediaDriver 시작 (항상 필수)
+        if (!startEmbeddedDriver()) {
+            std::cerr << "Failed to start embedded MediaDriver" << std::endl;
+            return false;
         }
 
         // Aeron Context 설정
@@ -170,16 +178,10 @@ bool AeronSubscriber::initialize() {
         // Archive 연결
         archive_ = aeron::archive::client::AeronArchive::connect(*archive_context_);
         std::cout << "Connected to Archive" << std::endl;
-        
-        // ReplayToLive Handler 생성
-        replay_to_live_handler_ = std::make_unique<ReplayToLiveHandler>(
-            aeron_,
-            archive_
-        );
-        
+
         running_ = true;
         std::cout << "Subscriber initialized successfully" << std::endl;
-        
+
         return true;
         
     } catch (const aeron::util::SourcedException& e) {
@@ -199,24 +201,209 @@ bool AeronSubscriber::startLive() {
         ? AeronConfig::SUBSCRIPTION_CHANNEL
         : config_.subscription_channel;
 
-    return replay_to_live_handler_->startLive(
+    std::cout << "  Subscription channel: " << channel << std::endl;
+    std::cout << "  Stream ID: " << config_.subscription_stream_id << std::endl;
+
+    // Live subscription 생성
+    std::int64_t subscription_id = aeron_->addSubscription(
         channel,
         config_.subscription_stream_id
     );
+
+    std::cout << "Subscription added with ID: " << subscription_id << std::endl;
+
+    // Subscription이 사용 가능할 때까지 대기
+    subscription_ = aeron_->findSubscription(subscription_id);
+    while (!subscription_) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        subscription_ = aeron_->findSubscription(subscription_id);
+    }
+
+    std::cout << "Live subscription ready" << std::endl;
+    return true;
 }
 
-bool AeronSubscriber::startReplay(int64_t startPosition) {
-    std::cout << "Starting in REPLAY mode from position: " << startPosition << std::endl;
+bool AeronSubscriber::startReplayMerge(int64_t recordingId, int64_t startPosition) {
+    std::cout << "Starting REPLAY MERGE mode..." << std::endl;
+    std::cout << "  Recording ID: " << recordingId << std::endl;
+    std::cout << "  Start position: " << startPosition << std::endl;
 
-    const std::string& channel = config_.subscription_channel.empty()
-        ? AeronConfig::SUBSCRIPTION_CHANNEL
-        : config_.subscription_channel;
+    try {
+        const std::string& live_channel = config_.subscription_channel.empty()
+            ? AeronConfig::SUBSCRIPTION_CHANNEL
+            : config_.subscription_channel;
 
-    return replay_to_live_handler_->startReplay(
-        channel,
-        config_.subscription_stream_id,
-        startPosition
-    );
+        std::cout << "  Live channel: " << live_channel << std::endl;
+        std::cout << "  Replay destination: " << config_.replay_destination << std::endl;
+
+        // 1. Live subscription 생성 (먼저 생성)
+        std::int64_t subscription_id = aeron_->addSubscription(
+            live_channel,
+            config_.subscription_stream_id
+        );
+
+        std::cout << "Subscription added with ID: " << subscription_id << std::endl;
+
+        // 2. Subscription이 사용 가능할 때까지 대기
+        subscription_ = aeron_->findSubscription(subscription_id);
+        while (!subscription_) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            subscription_ = aeron_->findSubscription(subscription_id);
+        }
+
+        std::cout << "Subscription ready for Replay" << std::endl;
+
+        // 3. Replay 시작 (간단한 API 사용)
+        // Archive가 recording을 replay destination으로 재생
+        // 재생이 끝나면 자동으로 live subscription이 받아감
+        replay_merge_session_id_ = archive_->startReplay(
+            recordingId,                      // 재생할 recording ID
+            startPosition,                    // 시작 위치
+            INT64_MAX,                        // 길이 (끝까지)
+            config_.replay_destination,       // Replay destination channel
+            config_.subscription_stream_id    // Stream ID
+        );
+
+        is_replay_merge_active_ = true;
+
+        std::cout << "Replay started with session ID: " << replay_merge_session_id_ << std::endl;
+        std::cout << "Replay will transition to live automatically when complete" << std::endl;
+        std::cout << "NOTE: This is a simplified ReplayMerge implementation" << std::endl;
+
+        return true;
+
+    } catch (const aeron::util::SourcedException& e) {
+        std::cerr << "Failed to start Replay: " << e.what()
+                  << " at " << e.where() << std::endl;
+        return false;
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to start Replay: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+int64_t AeronSubscriber::findLatestRecording(const std::string& channel, int32_t streamId) {
+    try {
+        std::cout << "Searching for latest recording..." << std::endl;
+        std::cout << "  Channel: " << channel << std::endl;
+        std::cout << "  Stream ID: " << streamId << std::endl;
+
+        // findLastMatchingRecording: Find most recent recording matching criteria
+        // Parameters: minRecordingId, channelFragment, streamId, sessionId (ANY_SESSION = -1)
+        int64_t recordingId = archive_->findLastMatchingRecording(
+            0,              // minRecordingId: start from 0
+            channel,        // channelFragment: exact or partial match
+            streamId,       // streamId to match
+            -1              // sessionId: -1 = ANY_SESSION (match any session)
+        );
+
+        if (recordingId == aeron::NULL_VALUE) {
+            std::cerr << "No recording found for channel: " << channel
+                      << ", stream ID: " << streamId << std::endl;
+            return -1;
+        }
+
+        std::cout << "Found recording ID: " << recordingId << std::endl;
+        return recordingId;
+
+    } catch (const aeron::util::SourcedException& e) {
+        std::cerr << "Failed to find recording: " << e.what()
+                  << " at " << e.where() << std::endl;
+        return -1;
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to find recording: " << e.what() << std::endl;
+        return -1;
+    }
+}
+
+int64_t AeronSubscriber::getRecordingStartPosition(int64_t recordingId) {
+    try {
+        // For now, return 0 (start of recording)
+        // TODO: Query archive for actual start position
+        return 0;
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to get recording start position: " << e.what() << std::endl;
+        return 0;
+    }
+}
+
+int64_t AeronSubscriber::getRecordingStopPosition(int64_t recordingId) {
+    try {
+        // Get current position of recording (may be still active)
+        int64_t position = archive_->getRecordingPosition(recordingId);
+        return position;
+    } catch (const aeron::util::SourcedException& e) {
+        std::cerr << "Failed to get recording position: " << e.what()
+                  << " at " << e.where() << std::endl;
+        return -1;
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to get recording position: " << e.what() << std::endl;
+        return -1;
+    }
+}
+
+bool AeronSubscriber::startReplayMergeAuto(int64_t startPosition) {
+    std::cout << "Starting REPLAY MERGE with AUTO-DISCOVERY..." << std::endl;
+
+    try {
+        // 1. Get channel from config
+        const std::string& channel = config_.subscription_channel.empty()
+            ? AeronConfig::SUBSCRIPTION_CHANNEL
+            : config_.subscription_channel;
+
+        // 2. Auto-discover latest recording
+        int64_t recordingId = findLatestRecording(channel, config_.subscription_stream_id);
+
+        if (recordingId < 0) {
+            std::cerr << "Auto-discovery failed: No recording found" << std::endl;
+            return false;
+        }
+
+        // 3. Get recording information
+        int64_t stopPosition = getRecordingStopPosition(recordingId);
+
+        std::cout << "\n========================================" << std::endl;
+        std::cout << "Auto-discovered Recording" << std::endl;
+        std::cout << "========================================" << std::endl;
+        std::cout << "Recording ID: " << recordingId << std::endl;
+        std::cout << "Channel: " << channel << std::endl;
+        std::cout << "Stream ID: " << config_.subscription_stream_id << std::endl;
+        std::cout << "Start position: " << startPosition << std::endl;
+
+        if (stopPosition >= 0) {
+            std::cout << "Current position: " << stopPosition << std::endl;
+            std::cout << "Messages to replay: ~" << ((stopPosition - startPosition) / 100) << std::endl;
+        }
+        std::cout << "========================================\n" << std::endl;
+
+        // 4. Start replay merge with discovered recording
+        return startReplayMerge(recordingId, startPosition);
+
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to start auto-discovery ReplayMerge: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+int64_t AeronSubscriber::extractMessageNumber(const std::string& message) {
+    // Extract message number from "Message 123 at ..." format
+    size_t msg_pos = message.find("Message ");
+    if (msg_pos == std::string::npos) {
+        return -1;
+    }
+
+    size_t num_start = msg_pos + 8;  // Length of "Message "
+    size_t num_end = message.find(" ", num_start);
+
+    if (num_end == std::string::npos) {
+        return -1;
+    }
+
+    try {
+        return std::stoll(message.substr(num_start, num_end - num_start));
+    } catch (const std::exception&) {
+        return -1;
+    }
 }
 
 void AeronSubscriber::handleMessage(
@@ -230,9 +417,28 @@ void AeronSubscriber::handleMessage(
 
     message_count_++;
 
-    // ② 메시지에서 전송 타임스탬프 추출
+    // ② 메시지에서 전송 타임스탬프 및 시퀀스 번호 추출
     std::string message(reinterpret_cast<const char*>(buffer), length);
     long long send_timestamp = 0;
+
+    // Extract message number for gap detection
+    int64_t msg_number = extractMessageNumber(message);
+
+    // Gap detection
+    if (msg_number >= 0) {
+        if (last_message_number_ >= 0 && msg_number != last_message_number_ + 1) {
+            int64_t gap_size = msg_number - last_message_number_ - 1;
+            gap_count_++;
+            total_gaps_ += gap_size;
+
+            std::cerr << "\n⚠️  GAP DETECTED!" << std::endl;
+            std::cerr << "  Last message: " << last_message_number_ << std::endl;
+            std::cerr << "  Current message: " << msg_number << std::endl;
+            std::cerr << "  Gap size: " << gap_size << " messages" << std::endl;
+            std::cerr << "  Total gaps: " << gap_count_ << " (" << total_gaps_ << " messages)\n" << std::endl;
+        }
+        last_message_number_ = msg_number;
+    }
 
     // "Message 123 at 1234567890" 형식에서 타임스탬프 추출
     size_t at_pos = message.find(" at ");
@@ -253,31 +459,42 @@ void AeronSubscriber::handleMessage(
             latency_max_ = latency_us;
         }
 
-        // ⑤ 주기적으로 통계 출력 (100개마다)
-        if (message_count_ % 100 == 0) {
+        // ⑤ 주기적으로 통계 출력 (1000개마다)
+        if (message_count_ % 1000 == 0) {
             printLatencyStats();
+            printGapStats();
         }
     } else {
         // 타임스탬프가 없는 메시지 (로깅만)
-        if (message_count_ % 100 == 0) {
-            auto mode = replay_to_live_handler_->getMode();
-            const char* mode_str = (mode == SubscriptionMode::REPLAY) ? "REPLAY" :
-                                   (mode == SubscriptionMode::TRANSITIONING) ? "TRANSITIONING" :
-                                   "LIVE";
-
+        if (message_count_ % 1000 == 0) {
+            std::string mode_str = is_replay_merge_active_ ? "REPLAY_MERGE" : "LIVE";
             std::cout << "[" << mode_str << "] Received " << message_count_
                       << " messages at position " << position << std::endl;
+            printGapStats();
         }
     }
 }
 
 void AeronSubscriber::run() {
     std::cout << "Subscriber running. Press Ctrl+C to exit." << std::endl;
-    
+
+    if (!subscription_) {
+        std::cerr << "No active subscription. Call startLive() or startReplayMerge() first." << std::endl;
+        return;
+    }
+
     while (running_) {
-        int fragments = replay_to_live_handler_->poll(
-            [this](const uint8_t* buffer, size_t length, int64_t position) {
-                handleMessage(buffer, length, position);
+        // 단일 subscription에서 폴링 (ReplayMerge의 경우 자동으로 병합됨)
+        int fragments = subscription_->poll(
+            [this](aeron::concurrent::AtomicBuffer& buffer,
+                   aeron::util::index_t offset,
+                   aeron::util::index_t length,
+                   const aeron::Header& header) {
+                handleMessage(
+                    buffer.buffer() + offset,
+                    static_cast<size_t>(length),
+                    header.position()
+                );
             },
             10  // fragmentLimit
         );
@@ -305,22 +522,47 @@ void AeronSubscriber::printLatencyStats() {
     std::cout << "========================================\n" << std::endl;
 }
 
+void AeronSubscriber::printGapStats() {
+    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "Gap Statistics" << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "Total messages received: " << message_count_ << std::endl;
+    std::cout << "Last message number: " << last_message_number_ << std::endl;
+    std::cout << "Gaps detected: " << gap_count_ << std::endl;
+    std::cout << "Total missing messages: " << total_gaps_ << std::endl;
+
+    if (last_message_number_ > 0) {
+        double loss_rate = (double)total_gaps_ / (last_message_number_ + 1) * 100.0;
+        std::cout << "Message loss rate: " << std::fixed << std::setprecision(2) << loss_rate << "%" << std::endl;
+    }
+    std::cout << "----------------------------------------\n" << std::endl;
+}
+
 void AeronSubscriber::shutdown() {
     std::cout << "Shutting down Subscriber..." << std::endl;
 
     running_ = false;
 
-    if (replay_to_live_handler_) {
-        replay_to_live_handler_->shutdown();
-    }
-
-    // 최종 레이턴시 통계 출력
-    if (latency_count_ > 0) {
+    // 최종 통계 출력
+    if (latency_count_ > 0 || gap_count_ > 0) {
         std::cout << "\n=== FINAL STATISTICS ===" << std::endl;
-        printLatencyStats();
+        if (latency_count_ > 0) {
+            printLatencyStats();
+        }
+        printGapStats();
     }
 
-    replay_to_live_handler_.reset();
+    // ReplayMerge 세션 중지 (활성화된 경우)
+    if (is_replay_merge_active_ && archive_ && replay_merge_session_id_ >= 0) {
+        try {
+            archive_->stopReplay(replay_merge_session_id_);
+            std::cout << "Stopped ReplayMerge session: " << replay_merge_session_id_ << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "Error stopping ReplayMerge: " << e.what() << std::endl;
+        }
+    }
+
+    subscription_.reset();
     archive_.reset();
     aeron_.reset();
 

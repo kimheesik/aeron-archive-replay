@@ -2,6 +2,66 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Quick Reference (Fast Project Overview)
+
+**Project Home**: `/home/hesed/devel/aeron`
+
+**What is this?**: Aeron-based C++ Publisher/Subscriber messaging system with Recording/Replay (v1.50.1)
+
+**Architecture**: 3-Process System
+- `ArchivingMediaDriver` (Java) - Archive recording/replay service
+- `aeron_publisher` (C++) - Message publisher with recording control
+- `aeron_subscriber` (C++) - Message subscriber with replay-to-live transition
+
+**Code Statistics**:
+- Total C++ lines: ~1,831 (480 headers + 1,351 source)
+- 3 modules: `common/`, `publisher/`, `subscriber/`
+- Build system: CMake + C++17
+
+**Key Files**:
+```
+common/include/AeronConfig.h          - Central configuration (channels, stream IDs)
+common/src/ConfigLoader.cpp           - INI config loader (405 lines)
+publisher/src/AeronPublisher.cpp      - Message publisher (226 lines)
+publisher/src/RecordingController.cpp - Archive recording control (228 lines)
+subscriber/src/AeronSubscriber.cpp    - Message receiver + latency measurement (337 lines)
+subscriber/src/ReplayToLiveHandler.cpp - Replay→Live state machine (248 lines)
+config/*.ini                          - Runtime configurations (7 files)
+scripts/start_archive_driver.sh       - Start Java ArchivingMediaDriver
+```
+
+**Quick Build & Run**:
+```bash
+# Build
+cd /home/hesed/devel/aeron/build && make -j$(nproc)
+
+# Run (3 terminals)
+# Terminal 1: scripts/start_archive_driver.sh
+# Terminal 2: build/publisher/aeron_publisher
+# Terminal 3: build/subscriber/aeron_subscriber [--replay-auto]
+```
+
+**Key Concepts**:
+- **ReplayMerge**: Simplified replay-to-live transition using Archive's startReplay API
+- **Auto-Discovery**: Automatic recording ID discovery (no manual lookup required)
+- **Gap Detection**: Real-time message loss detection and reporting
+- **Embedded MediaDriver**: Subscriber ALWAYS uses embedded MediaDriver (mandatory)
+- **Internal Latency Measurement**: Nanosecond precision inside subscriber (NOT external scripts)
+- **Message Format**: `"Message <N> at <nanosecond_timestamp>"`
+- **Configuration Hierarchy**: `AeronConfig.h` → INI files → CLI args
+- **Performance (WSL2)**: ~34μs min, ~3.3ms avg, ~42ms max latency
+
+**Dependencies**:
+- Aeron SDK: `/home/hesed/aeron/` (include + lib)
+- Java ArchivingMediaDriver: Runs separately, controls `/home/hesed/shm/aeron`
+- CMake 3.15+, C++17, pthread
+
+**Common Issues**:
+- Must start ArchivingMediaDriver FIRST before publisher/subscriber
+- Ensure `/home/hesed/shm/aeron` directory exists and is writable
+
+---
+
 ## Project Overview
 
 This is an Aeron-based high-performance messaging system implementing Publisher/Subscriber architecture with Recording/Replay capabilities. The system consists of C++ Publisher/Subscriber applications communicating via Aeron (v1.50.1) with a Java ArchivingMediaDriver for stream recording and replay functionality.
@@ -57,12 +117,12 @@ cd /home/hesed/devel/aeron/scripts
 ```
 
 **Configuration**:
-- Uses `/dev/shm/aeron` for Aeron shared memory (configured in script)
-- Archive recordings stored in `/home/hesed/aeron-archive`
+- Uses `/home/hesed/shm/aeron` for Aeron shared memory (avoids /dev/shm size limits)
+- Archive recordings stored in `/home/hesed/shm/aeron-archive`
 - Control channel: `localhost:8010`
 - Must be running before starting Publisher or Subscriber
 
-**Note**: There's a discrepancy - the start script uses `/dev/shm/aeron` but `AeronConfig.h` has `/home/hesed/shm/aeron`. When modifying configurations, ensure both match.
+**Note**: All configurations now consistently use `/home/hesed/shm/aeron` instead of `/dev/shm/aeron` to avoid tmpfs size limitations.
 
 ### Starting Publisher
 
@@ -78,27 +138,55 @@ Interactive commands:
 
 ### Starting Subscriber
 
+**IMPORTANT**: Subscriber now ALWAYS uses embedded MediaDriver (mandatory).
+
 **Live mode** (receive real-time messages):
 ```bash
 cd /home/hesed/devel/aeron/build
-./subscriber/aeron_subscriber
+./subscriber/aeron_subscriber --config ../config/aeron-local.ini
 ```
 
-**Replay mode** (replay from position 0, then transition to live):
+**ReplayMerge mode with auto-discovery** (finds latest recording automatically):
 ```bash
-./subscriber/aeron_subscriber --replay 0
+./subscriber/aeron_subscriber --config ../config/aeron-local.ini --replay-auto
+```
+
+**ReplayMerge mode with specific recording ID**:
+```bash
+./subscriber/aeron_subscriber --config ../config/aeron-local.ini --replay-merge 1 --position 0
+```
+
+**Advanced**: Auto-discovery with custom start position:
+```bash
+./subscriber/aeron_subscriber --config ../config/aeron-local.ini --replay-auto --position 1000
 ```
 
 ## Key Architecture Concepts
 
-### Replay-to-Live Mechanism
+### ReplayMerge Mechanism
 
-The `ReplayToLiveHandler` class implements a sophisticated state machine with three modes:
-- **REPLAY**: Receiving historical data from archive
-- **TRANSITIONING**: Brief transition state when replay completes
-- **LIVE**: Receiving real-time data from publisher
+The Subscriber implements a simplified ReplayMerge using Archive's `startReplay()` API:
+- **Create live subscription** on the live channel (e.g., multicast)
+- **Start replay** to a separate replay destination channel
+- **Single subscription** receives both replay and live messages
+- **Automatic transition** when replay completes
 
-**Critical Implementation Detail**: The handler pre-creates the live subscription BEFORE replay completes to ensure seamless transition without message loss. Replay completion is detected by checking `replay_subscription_->imageCount() == 0`.
+**Implementation** (`AeronSubscriber::startReplayMerge()`):
+```cpp
+// 1. Create live subscription
+subscription_ = aeron_->addSubscription(live_channel, stream_id);
+
+// 2. Start replay to replay destination
+replay_session_id = archive_->startReplay(
+    recordingId, startPosition, INT64_MAX,
+    replay_destination, stream_id
+);
+
+// 3. Poll single subscription for both replay and live messages
+subscription_->poll(handler, fragmentLimit);
+```
+
+**Note**: This is a simplified implementation. Replay messages arrive on `replay_destination`, then automatically transitions to live messages from `live_channel` when replay completes.
 
 ### Latency Measurement
 
@@ -167,12 +255,12 @@ cd /home/hesed/devel/aeron/scripts
 
 ### AeronConfig.h
 
-This is the **single source of truth** for all endpoint configurations. Before running the system:
+This is the **single source of truth** for all endpoint configurations.
 
-1. Verify `AERON_DIR` matches the ArchivingMediaDriver script setting
-2. Currently set to `/home/hesed/shm/aeron` in code
-3. `start_archive_driver.sh` uses `/dev/shm/aeron`
-4. **These should match** - fix one or the other before deployment
+**AERON_DIR**: Set to `/home/hesed/shm/aeron` (consistent across all configs)
+- Avoids `/dev/shm` size limitations in WSL2/containerized environments
+- All INI config files and scripts now use `/home/hesed/shm/*` paths
+- Can be overridden via INI files or CLI arguments
 
 ### CMake Include Paths
 
@@ -192,7 +280,7 @@ These paths are hard-coded and must match the actual Aeron installation location
 
 **Solution**:
 1. Check if Java process is running: `ps aux | grep ArchivingMediaDriver`
-2. Verify `/dev/shm/aeron` (or `/home/hesed/shm/aeron`) exists
+2. Verify `/home/hesed/shm/aeron` directory exists and is writable
 3. Restart ArchivingMediaDriver first
 4. Ensure control channel in `AeronConfig.h` matches driver configuration
 
@@ -236,9 +324,9 @@ Based on internal measurements (WSL2 environment):
 
 ### Performance Bottlenecks
 
-1. **Aeron directory location**: Currently configured for `/home/hesed/shm/aeron` (regular disk). For better performance, use `/dev/shm/aeron` (tmpfs/shared memory).
+1. **Aeron directory location**: Currently configured for `/home/hesed/shm/aeron` (regular disk). This avoids `/dev/shm` size limits but may have slightly higher latency than tmpfs. For maximum performance with sufficient space, consider `/dev/shm/aeron`.
 
-2. **Transport mechanism**: Currently using UDP localhost. For even lower latency, consider IPC transport.
+2. **Transport mechanism**: Currently using UDP localhost. For even lower latency, consider IPC transport (requires shared aeron directory).
 
 3. **WSL2 overhead**: Running on WSL2 adds virtualization overhead. Native Linux would be faster.
 

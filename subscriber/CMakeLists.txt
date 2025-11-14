@@ -1,6 +1,5 @@
 add_executable(aeron_subscriber
     src/AeronSubscriber.cpp
-    src/ReplayToLiveHandler.cpp
     src/main.cpp
 )
 

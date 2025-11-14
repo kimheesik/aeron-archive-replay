@@ -154,30 +154,6 @@ src/AeronSubscriber.cpp.s:
 	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/src/AeronSubscriber.cpp.s
 .PHONY : src/AeronSubscriber.cpp.s
 
-src/ReplayToLiveHandler.o: src/ReplayToLiveHandler.cpp.o
-.PHONY : src/ReplayToLiveHandler.o
-
-# target to build an object file
-src/ReplayToLiveHandler.cpp.o:
-	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/src/ReplayToLiveHandler.cpp.o
-.PHONY : src/ReplayToLiveHandler.cpp.o
-
-src/ReplayToLiveHandler.i: src/ReplayToLiveHandler.cpp.i
-.PHONY : src/ReplayToLiveHandler.i
-
-# target to preprocess a source file
-src/ReplayToLiveHandler.cpp.i:
-	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/src/ReplayToLiveHandler.cpp.i
-.PHONY : src/ReplayToLiveHandler.cpp.i
-
-src/ReplayToLiveHandler.s: src/ReplayToLiveHandler.cpp.s
-.PHONY : src/ReplayToLiveHandler.s
-
-# target to generate assembly for a file
-src/ReplayToLiveHandler.cpp.s:
-	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/src/ReplayToLiveHandler.cpp.s
-.PHONY : src/ReplayToLiveHandler.cpp.s
-
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -214,9 +190,6 @@ help:
 	@echo "... src/AeronSubscriber.o"
 	@echo "... src/AeronSubscriber.i"
 	@echo "... src/AeronSubscriber.s"
-	@echo "... src/ReplayToLiveHandler.o"
-	@echo "... src/ReplayToLiveHandler.i"
-	@echo "... src/ReplayToLiveHandler.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

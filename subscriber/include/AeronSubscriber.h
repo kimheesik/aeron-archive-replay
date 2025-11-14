@@ -7,17 +7,17 @@
 #include <sys/types.h>
 #include "Aeron.h"
 #include "client/AeronArchive.h"
-#include "ReplayToLiveHandler.h"
 
 namespace aeron {
 namespace example {
 
 struct SubscriberConfig {
-    std::string aeron_dir = "/dev/shm/aeron";
-    bool use_embedded_driver = false;  // Embedded MediaDriver 사용 여부
+    std::string aeron_dir = "/home/hesed/shm/aeron-subscriber";
+    bool use_embedded_driver = true;   // Embedded MediaDriver 필수 (항상 true)
     std::string archive_control_channel = "";  // 비어있으면 AeronConfig 사용
     std::string subscription_channel = "";     // 비어있으면 AeronConfig 사용
     int subscription_stream_id = 10;           // 기본값
+    std::string replay_destination = "aeron:udp?endpoint=localhost:40457";  // ReplayMerge destination
 
     SubscriberConfig() = default;
 };
@@ -30,9 +30,15 @@ public:
 
     bool initialize();
     bool startLive();
-    bool startReplay(int64_t startPosition);
+    bool startReplayMerge(int64_t recordingId, int64_t startPosition);
+    bool startReplayMergeAuto(int64_t startPosition = 0);  // Auto-discover latest recording
     void run();
     void shutdown();
+
+    // Recording discovery helpers
+    int64_t findLatestRecording(const std::string& channel, int32_t streamId);
+    int64_t getRecordingStartPosition(int64_t recordingId);
+    int64_t getRecordingStopPosition(int64_t recordingId);
 
 private:
     SubscriberConfig config_;
@@ -43,7 +49,10 @@ private:
     std::shared_ptr<aeron::archive::client::Context> archive_context_;
     std::shared_ptr<aeron::archive::client::AeronArchive> archive_;
 
-    std::unique_ptr<ReplayToLiveHandler> replay_to_live_handler_;
+    // ReplayMerge 관련
+    std::shared_ptr<aeron::Subscription> subscription_;
+    int64_t replay_merge_session_id_;
+    bool is_replay_merge_active_;
 
     std::atomic<bool> running_;
     int64_t message_count_;
@@ -60,8 +69,15 @@ private:
     double latency_max_;
     int64_t latency_count_;
 
+    // Gap detection
+    int64_t last_message_number_;
+    int64_t gap_count_;
+    int64_t total_gaps_;
+
     void handleMessage(const uint8_t* buffer, size_t length, int64_t position);
     void printLatencyStats();
+    void printGapStats();
+    int64_t extractMessageNumber(const std::string& message);
 };
 
 } // namespace example
