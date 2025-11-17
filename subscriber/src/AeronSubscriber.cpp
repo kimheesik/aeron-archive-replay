@@ -4,11 +4,6 @@
 #include <iomanip>
 #include <thread>
 #include <chrono>
-#include <unistd.h>
-#include <signal.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
-#include <cstring>
 
 namespace aeron {
 namespace example {
@@ -16,9 +11,11 @@ namespace example {
 AeronSubscriber::AeronSubscriber()
     : running_(false)
     , message_count_(0)
-    , driver_pid_(-1)
-    , replay_merge_session_id_(-1)
+    , replay_session_id_(-1)
     , is_replay_merge_active_(false)
+    , is_replay_complete_(false)
+    , replay_message_count_(0)
+    , live_message_count_(0)
     , latency_sum_(0.0)
     , latency_min_(0.0)
     , latency_max_(0.0)
@@ -26,16 +23,17 @@ AeronSubscriber::AeronSubscriber()
     , last_message_number_(-1)
     , gap_count_(0)
     , total_gaps_(0) {
-    // 기본 설정 사용 (embedded driver 필수)
 }
 
 AeronSubscriber::AeronSubscriber(const SubscriberConfig& config)
     : config_(config)
     , running_(false)
     , message_count_(0)
-    , driver_pid_(-1)
-    , replay_merge_session_id_(-1)
+    , replay_session_id_(-1)
     , is_replay_merge_active_(false)
+    , is_replay_complete_(false)
+    , replay_message_count_(0)
+    , live_message_count_(0)
     , latency_sum_(0.0)
     , latency_min_(0.0)
     , latency_max_(0.0)
@@ -49,109 +47,11 @@ AeronSubscriber::~AeronSubscriber() {
     shutdown();
 }
 
-bool AeronSubscriber::startEmbeddedDriver() {
-    std::cout << "Starting embedded C Media Driver..." << std::endl;
-    std::cout << "  Aeron directory: " << config_.aeron_dir << std::endl;
-
-    // Fork 프로세스
-    driver_pid_ = fork();
-
-    if (driver_pid_ < 0) {
-        std::cerr << "Failed to fork MediaDriver process: " << strerror(errno) << std::endl;
-        return false;
-    }
-
-    if (driver_pid_ == 0) {
-        // 자식 프로세스: C Media Driver 실행
-        const char* aeronmd_path = "/home/hesed/aeron/bin/aeronmd";
-
-        // C Media Driver 실행 (Java 대신 C++)
-        execlp(aeronmd_path, "aeronmd",
-               (std::string("-Daeron.dir=") + config_.aeron_dir).c_str(),
-               "-Daeron.threading.mode=SHARED",
-               nullptr);
-
-        // execlp 실패 시
-        std::cerr << "Failed to exec C MediaDriver: " << strerror(errno) << std::endl;
-        std::cerr << "Make sure " << aeronmd_path << " exists and is executable" << std::endl;
-        exit(1);
-    }
-
-    // 부모 프로세스: MediaDriver가 준비될 때까지 대기
-    std::cout << "C Media Driver started with PID: " << driver_pid_ << std::endl;
-    return waitForDriverReady();
-}
-
-bool AeronSubscriber::waitForDriverReady() {
-    std::cout << "Waiting for MediaDriver to be ready..." << std::endl;
-
-    // CnC 파일이 생성될 때까지 대기
-    std::string cnc_file = config_.aeron_dir + "/cnc.dat";
-    int max_retries = 50;  // 5초 대기 (50 * 100ms)
-
-    for (int i = 0; i < max_retries; ++i) {
-        struct stat buffer;
-        if (stat(cnc_file.c_str(), &buffer) == 0) {
-            std::cout << "MediaDriver is ready (CnC file found)" << std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));  // 추가 안정화 시간
-            return true;
-        }
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-        // 자식 프로세스 상태 확인
-        int status;
-        pid_t result = waitpid(driver_pid_, &status, WNOHANG);
-        if (result != 0) {
-            std::cerr << "MediaDriver process died unexpectedly" << std::endl;
-            driver_pid_ = -1;
-            return false;
-        }
-    }
-
-    std::cerr << "Timeout waiting for MediaDriver to be ready" << std::endl;
-    stopEmbeddedDriver();
-    return false;
-}
-
-void AeronSubscriber::stopEmbeddedDriver() {
-    if (driver_pid_ > 0) {
-        std::cout << "Stopping embedded MediaDriver (PID: " << driver_pid_ << ")..." << std::endl;
-
-        // SIGTERM 전송
-        kill(driver_pid_, SIGTERM);
-
-        // 정상 종료 대기 (최대 3초)
-        int max_wait = 30;
-        for (int i = 0; i < max_wait; ++i) {
-            int status;
-            pid_t result = waitpid(driver_pid_, &status, WNOHANG);
-            if (result != 0) {
-                std::cout << "MediaDriver stopped gracefully" << std::endl;
-                driver_pid_ = -1;
-                return;
-            }
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-
-        // 강제 종료
-        std::cout << "MediaDriver did not stop gracefully, sending SIGKILL..." << std::endl;
-        kill(driver_pid_, SIGKILL);
-        waitpid(driver_pid_, nullptr, 0);
-        driver_pid_ = -1;
-    }
-}
-
 bool AeronSubscriber::initialize() {
     try {
         std::cout << "Initializing Subscriber..." << std::endl;
         std::cout << "  Aeron dir: " << config_.aeron_dir << std::endl;
-
-        // Embedded MediaDriver 시작 (항상 필수)
-        if (!startEmbeddedDriver()) {
-            std::cerr << "Failed to start embedded MediaDriver" << std::endl;
-            return false;
-        }
+        std::cout << "  NOTE: External MediaDriver (aeronmd) must be running" << std::endl;
 
         // Aeron Context 설정
         context_ = std::make_shared<aeron::Context>();
@@ -160,7 +60,7 @@ bool AeronSubscriber::initialize() {
         // Aeron 인스턴스 생성
         aeron_ = aeron::Aeron::connect(*context_);
         std::cout << "Connected to Aeron" << std::endl;
-        
+
         // Archive Context 설정 (Publisher 서버의 Archive에 연결)
         archive_context_ = std::make_shared<aeron::archive::client::Context>();
         archive_context_->aeron(aeron_);
@@ -174,7 +74,7 @@ bool AeronSubscriber::initialize() {
         archive_context_->controlResponseChannel(AeronConfig::ARCHIVE_CONTROL_RESPONSE_CHANNEL);
 
         std::cout << "Archive control channel: " << control_channel << std::endl;
-        
+
         // Archive 연결
         archive_ = aeron::archive::client::AeronArchive::connect(*archive_context_);
         std::cout << "Connected to Archive" << std::endl;
@@ -213,10 +113,10 @@ bool AeronSubscriber::startLive() {
     std::cout << "Subscription added with ID: " << subscription_id << std::endl;
 
     // Subscription이 사용 가능할 때까지 대기
-    subscription_ = aeron_->findSubscription(subscription_id);
-    while (!subscription_) {
+    live_subscription_ = aeron_->findSubscription(subscription_id);
+    while (!live_subscription_) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        subscription_ = aeron_->findSubscription(subscription_id);
+        live_subscription_ = aeron_->findSubscription(subscription_id);
     }
 
     std::cout << "Live subscription ready" << std::endl;
@@ -224,7 +124,7 @@ bool AeronSubscriber::startLive() {
 }
 
 bool AeronSubscriber::startReplayMerge(int64_t recordingId, int64_t startPosition) {
-    std::cout << "Starting REPLAY MERGE mode..." << std::endl;
+    std::cout << "Starting REPLAY MERGE mode with Aeron Archive API..." << std::endl;
     std::cout << "  Recording ID: " << recordingId << std::endl;
     std::cout << "  Start position: " << startPosition << std::endl;
 
@@ -236,48 +136,68 @@ bool AeronSubscriber::startReplayMerge(int64_t recordingId, int64_t startPositio
         std::cout << "  Live channel: " << live_channel << std::endl;
         std::cout << "  Replay destination: " << config_.replay_destination << std::endl;
 
-        // 1. Live subscription 생성 (먼저 생성)
-        std::int64_t subscription_id = aeron_->addSubscription(
+        // ========================================
+        // ReplayMerge Pattern using Archive API
+        // ========================================
+
+        // 1. Create LIVE subscription first
+        //    This will receive live messages during and after replay
+        std::int64_t live_sub_id = aeron_->addSubscription(
             live_channel,
             config_.subscription_stream_id
         );
 
-        std::cout << "Subscription added with ID: " << subscription_id << std::endl;
-
-        // 2. Subscription이 사용 가능할 때까지 대기
-        subscription_ = aeron_->findSubscription(subscription_id);
-        while (!subscription_) {
+        live_subscription_ = aeron_->findSubscription(live_sub_id);
+        while (!live_subscription_) {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
-            subscription_ = aeron_->findSubscription(subscription_id);
+            live_subscription_ = aeron_->findSubscription(live_sub_id);
         }
+        std::cout << "✓ Live subscription created" << std::endl;
 
-        std::cout << "Subscription ready for Replay" << std::endl;
+        // 2. Create REPLAY subscription
+        //    Replay data will be sent to replay destination
+        std::int64_t replay_sub_id = aeron_->addSubscription(
+            config_.replay_destination,
+            config_.subscription_stream_id
+        );
 
-        // 3. Replay 시작 (간단한 API 사용)
-        // Archive가 recording을 replay destination으로 재생
-        // 재생이 끝나면 자동으로 live subscription이 받아감
-        replay_merge_session_id_ = archive_->startReplay(
-            recordingId,                      // 재생할 recording ID
-            startPosition,                    // 시작 위치
-            INT64_MAX,                        // 길이 (끝까지)
+        replay_subscription_ = aeron_->findSubscription(replay_sub_id);
+        while (!replay_subscription_) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            replay_subscription_ = aeron_->findSubscription(replay_sub_id);
+        }
+        std::cout << "✓ Replay subscription created" << std::endl;
+
+        // 3. Start Replay using Archive API
+        //    Archive will send recording data to replay destination
+        replay_session_id_ = archive_->startReplay(
+            recordingId,                      // Recording to replay
+            startPosition,                    // Start position
+            INT64_MAX,                        // Length (to end)
             config_.replay_destination,       // Replay destination channel
             config_.subscription_stream_id    // Stream ID
         );
 
         is_replay_merge_active_ = true;
+        is_replay_complete_ = false;
 
-        std::cout << "Replay started with session ID: " << replay_merge_session_id_ << std::endl;
-        std::cout << "Replay will transition to live automatically when complete" << std::endl;
-        std::cout << "NOTE: This is a simplified ReplayMerge implementation" << std::endl;
+        std::cout << "✓ Replay started (session ID: " << replay_session_id_ << ")" << std::endl;
+        std::cout << "\n========================================" << std::endl;
+        std::cout << "ReplayMerge Active" << std::endl;
+        std::cout << "========================================" << std::endl;
+        std::cout << "Phase 1: REPLAY - Receiving recorded messages" << std::endl;
+        std::cout << "Phase 2: TRANSITION - Replay completes" << std::endl;
+        std::cout << "Phase 3: LIVE - Receiving live messages only" << std::endl;
+        std::cout << "========================================\n" << std::endl;
 
         return true;
 
     } catch (const aeron::util::SourcedException& e) {
-        std::cerr << "Failed to start Replay: " << e.what()
+        std::cerr << "Failed to start ReplayMerge: " << e.what()
                   << " at " << e.where() << std::endl;
         return false;
     } catch (const std::exception& e) {
-        std::cerr << "Failed to start Replay: " << e.what() << std::endl;
+        std::cerr << "Failed to start ReplayMerge: " << e.what() << std::endl;
         return false;
     }
 }
@@ -477,28 +397,124 @@ void AeronSubscriber::handleMessage(
 
 void AeronSubscriber::run() {
     std::cout << "Subscriber running. Press Ctrl+C to exit." << std::endl;
+    std::cout << "========================================\n" << std::endl;
 
-    if (!subscription_) {
+    if (!live_subscription_ && !replay_subscription_) {
         std::cerr << "No active subscription. Call startLive() or startReplayMerge() first." << std::endl;
         return;
     }
 
-    while (running_) {
-        // 단일 subscription에서 폴링 (ReplayMerge의 경우 자동으로 병합됨)
-        int fragments = subscription_->poll(
-            [this](aeron::concurrent::AtomicBuffer& buffer,
-                   aeron::util::index_t offset,
-                   aeron::util::index_t length,
-                   const aeron::Header& header) {
-                handleMessage(
-                    buffer.buffer() + offset,
-                    static_cast<size_t>(length),
-                    header.position()
-                );
-            },
-            10  // fragmentLimit
+    // Fragment handler lambda - Replay용
+    auto replayFragmentHandler = [this](
+        aeron::concurrent::AtomicBuffer& buffer,
+        aeron::util::index_t offset,
+        aeron::util::index_t length,
+        const aeron::Header& header)
+    {
+        replay_message_count_++;
+        handleMessage(
+            buffer.buffer() + offset,
+            static_cast<size_t>(length),
+            header.position()
         );
-        
+    };
+
+    // Fragment handler lambda - Live용
+    auto liveFragmentHandler = [this](
+        aeron::concurrent::AtomicBuffer& buffer,
+        aeron::util::index_t offset,
+        aeron::util::index_t length,
+        const aeron::Header& header)
+    {
+        live_message_count_++;
+        handleMessage(
+            buffer.buffer() + offset,
+            static_cast<size_t>(length),
+            header.position()
+        );
+    };
+
+    while (running_) {
+        int fragments = 0;
+
+        if (is_replay_merge_active_) {
+            // ========================================
+            // ReplayMerge Mode
+            // ========================================
+
+            // Poll replay subscription (for replayed data)
+            if (!is_replay_complete_ && replay_subscription_) {
+                int replay_fragments = replay_subscription_->poll(replayFragmentHandler, 10);
+                fragments += replay_fragments;
+
+                // 100개마다 Replay 진행 상황 출력
+                if (replay_message_count_ > 0 && replay_message_count_ % 100 == 0) {
+                    std::cout << "[REPLAY] Received " << replay_message_count_
+                              << " messages from recording" << std::endl;
+                }
+
+                // Check if replay is complete (no more images)
+                if (replay_subscription_->imageCount() == 0 && !is_replay_complete_) {
+                    is_replay_complete_ = true;
+                    std::cout << "\n========================================" << std::endl;
+                    std::cout << "✓ REPLAY COMPLETE" << std::endl;
+                    std::cout << "  Total replay messages: " << replay_message_count_ << std::endl;
+                    std::cout << "  Transitioning to LIVE mode..." << std::endl;
+                    std::cout << "========================================\n" << std::endl;
+
+                    // Clean up replay subscription
+                    replay_subscription_.reset();
+
+                    // Optionally stop replay session
+                    if (replay_session_id_ >= 0) {
+                        try {
+                            archive_->stopReplay(replay_session_id_);
+                        } catch (const std::exception& e) {
+                            std::cerr << "Warning: Failed to stop replay: " << e.what() << std::endl;
+                        }
+                    }
+                }
+            }
+
+            // Always poll live subscription (may receive live data during replay)
+            if (live_subscription_) {
+                int live_fragments = live_subscription_->poll(liveFragmentHandler, 10);
+                fragments += live_fragments;
+
+                // ReplayMerge 중에도 Live 메시지 수신 시 출력
+                if (live_fragments > 0 && live_message_count_ % 100 == 0) {
+                    std::cout << "[LIVE during REPLAY] Received " << live_message_count_
+                              << " live messages" << std::endl;
+                }
+            }
+
+            // If replay is complete, transition to live-only mode
+            if (is_replay_complete_) {
+                is_replay_merge_active_ = false;
+                std::cout << "\n========================================" << std::endl;
+                std::cout << "✓ Now in LIVE-ONLY mode" << std::endl;
+                std::cout << "  Total replay messages: " << replay_message_count_ << std::endl;
+                std::cout << "  Live messages during replay: " << live_message_count_ << std::endl;
+                std::cout << "  Now receiving live messages only..." << std::endl;
+                std::cout << "========================================\n" << std::endl;
+            }
+
+        } else {
+            // ========================================
+            // Live-only Mode
+            // ========================================
+            if (live_subscription_) {
+                int live_fragments = live_subscription_->poll(liveFragmentHandler, 10);
+                fragments += live_fragments;
+
+                // 100개마다 Live 수신 상황 출력
+                if (live_fragments > 0 && live_message_count_ % 100 == 0) {
+                    std::cout << "[LIVE] Received " << live_message_count_
+                              << " messages (Total: " << message_count_ << ")" << std::endl;
+                }
+            }
+        }
+
         if (fragments == 0) {
             std::this_thread::sleep_for(
                 std::chrono::milliseconds(AeronConfig::IDLE_SLEEP_MS));
@@ -552,24 +568,19 @@ void AeronSubscriber::shutdown() {
         printGapStats();
     }
 
-    // ReplayMerge 세션 중지 (활성화된 경우)
-    if (is_replay_merge_active_ && archive_ && replay_merge_session_id_ >= 0) {
+    // ReplayMerge 정리
+    if (replay_session_id_ >= 0 && archive_) {
         try {
-            archive_->stopReplay(replay_merge_session_id_);
-            std::cout << "Stopped ReplayMerge session: " << replay_merge_session_id_ << std::endl;
+            archive_->stopReplay(replay_session_id_);
         } catch (const std::exception& e) {
-            std::cerr << "Error stopping ReplayMerge: " << e.what() << std::endl;
+            // Ignore errors during shutdown
         }
     }
 
-    subscription_.reset();
+    replay_subscription_.reset();
+    live_subscription_.reset();
     archive_.reset();
     aeron_.reset();
-
-    // Embedded MediaDriver 정리
-    if (config_.use_embedded_driver) {
-        stopEmbeddedDriver();
-    }
 
     std::cout << "Subscriber shutdown complete. Total messages: "
               << message_count_ << std::endl;

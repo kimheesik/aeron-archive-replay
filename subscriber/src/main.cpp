@@ -25,7 +25,7 @@ void printUsage(const char* program_name) {
               << "  --position <pos>                Start position for ReplayMerge (default: 0)\n"
               << "  --print-config                  Print current configuration and exit\n"
               << "  -h, --help                      Show this help message\n"
-              << "\nNOTE: Embedded MediaDriver is now MANDATORY (always enabled)\n"
+              << "\nNOTE: External MediaDriver (aeronmd) must be running before starting subscriber\n"
               << "\nExamples:\n"
               << "  # Live mode (default)\n"
               << "  " << program_name << " --config config/aeron-local.ini\n"
@@ -152,7 +152,6 @@ int main(int argc, char* argv[]) {
     // 5. SubscriberConfig에 적용
     aeron::example::SubscriberConfig sub_config;
     sub_config.aeron_dir = aeron_settings.aeron_dir;
-    sub_config.use_embedded_driver = true;  // 항상 true (필수)
     sub_config.archive_control_channel = aeron_settings.archive_control_request_channel;
     sub_config.subscription_channel = aeron_settings.subscription_channel;
     sub_config.subscription_stream_id = aeron_settings.subscription_stream_id;
@@ -163,7 +162,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Subscriber Configuration" << std::endl;
     std::cout << "========================================" << std::endl;
     std::cout << "Aeron directory: " << sub_config.aeron_dir << std::endl;
-    std::cout << "Embedded driver: ENABLED (mandatory)" << std::endl;
+    std::cout << "MediaDriver: External (must be running separately)" << std::endl;
     std::cout << "Archive control: " << sub_config.archive_control_channel << std::endl;
     std::cout << "Subscription channel: " << sub_config.subscription_channel << std::endl;
 

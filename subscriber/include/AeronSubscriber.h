@@ -4,7 +4,6 @@
 #include <memory>
 #include <atomic>
 #include <string>
-#include <sys/types.h>
 #include "Aeron.h"
 #include "client/AeronArchive.h"
 
@@ -13,7 +12,6 @@ namespace example {
 
 struct SubscriberConfig {
     std::string aeron_dir = "/home/hesed/shm/aeron-subscriber";
-    bool use_embedded_driver = true;   // Embedded MediaDriver 필수 (항상 true)
     std::string archive_control_channel = "";  // 비어있으면 AeronConfig 사용
     std::string subscription_channel = "";     // 비어있으면 AeronConfig 사용
     int subscription_stream_id = 10;           // 기본값
@@ -49,19 +47,19 @@ private:
     std::shared_ptr<aeron::archive::client::Context> archive_context_;
     std::shared_ptr<aeron::archive::client::AeronArchive> archive_;
 
-    // ReplayMerge 관련
-    std::shared_ptr<aeron::Subscription> subscription_;
-    int64_t replay_merge_session_id_;
+    // ReplayMerge 관련 (Manual implementation using Archive API)
+    std::shared_ptr<aeron::Subscription> live_subscription_;
+    std::shared_ptr<aeron::Subscription> replay_subscription_;
+    int64_t replay_session_id_;
     bool is_replay_merge_active_;
+    bool is_replay_complete_;
 
     std::atomic<bool> running_;
     int64_t message_count_;
 
-    // Embedded MediaDriver 관련
-    pid_t driver_pid_;  // MediaDriver 프로세스 ID
-    bool startEmbeddedDriver();
-    void stopEmbeddedDriver();
-    bool waitForDriverReady();
+    // 모드별 메시지 카운트
+    int64_t replay_message_count_;
+    int64_t live_message_count_;
 
     // 레이턴시 통계
     double latency_sum_;
