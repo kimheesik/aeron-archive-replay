@@ -53,4 +53,6 @@ set(CMAKE_DEPEND_INFO_FILES
   "common/CMakeFiles/aeron_common.dir/DependInfo.cmake"
   "publisher/CMakeFiles/aeron_publisher.dir/DependInfo.cmake"
   "subscriber/CMakeFiles/aeron_subscriber.dir/DependInfo.cmake"
+  "subscriber/CMakeFiles/aeron_subscriber_monitored.dir/DependInfo.cmake"
+  "subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/DependInfo.cmake"
   )

@@ -115,6 +115,8 @@ publisher/clean: publisher/CMakeFiles/aeron_publisher.dir/clean
 
 # Recursive "all" directory target.
 subscriber/all: subscriber/CMakeFiles/aeron_subscriber.dir/all
+subscriber/all: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/all
+subscriber/all: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/all
 .PHONY : subscriber/all
 
 # Recursive "preinstall" directory target.
@@ -123,6 +125,8 @@ subscriber/preinstall:
 
 # Recursive "clean" directory target.
 subscriber/clean: subscriber/CMakeFiles/aeron_subscriber.dir/clean
+subscriber/clean: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/clean
+subscriber/clean: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/clean
 .PHONY : subscriber/clean
 
 #=============================================================================
@@ -202,6 +206,58 @@ aeron_subscriber: subscriber/CMakeFiles/aeron_subscriber.dir/rule
 subscriber/CMakeFiles/aeron_subscriber.dir/clean:
 	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/clean
 .PHONY : subscriber/CMakeFiles/aeron_subscriber.dir/clean
+
+#=============================================================================
+# Target rules for target subscriber/CMakeFiles/aeron_subscriber_monitored.dir
+
+# All Build rule for target.
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/all: common/CMakeFiles/aeron_common.dir/all
+	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/depend
+	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=12,13,14 "Built target aeron_subscriber_monitored"
+.PHONY : subscriber/CMakeFiles/aeron_subscriber_monitored.dir/all
+
+# Build rule for subdir invocation for target.
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 7
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 subscriber/CMakeFiles/aeron_subscriber_monitored.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 0
+.PHONY : subscriber/CMakeFiles/aeron_subscriber_monitored.dir/rule
+
+# Convenience name for target.
+aeron_subscriber_monitored: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/rule
+.PHONY : aeron_subscriber_monitored
+
+# clean rule for target.
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/clean:
+	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/clean
+.PHONY : subscriber/CMakeFiles/aeron_subscriber_monitored.dir/clean
+
+#=============================================================================
+# Target rules for target subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir
+
+# All Build rule for target.
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/all: common/CMakeFiles/aeron_common.dir/all
+	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/depend
+	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=15,16,17,18 "Built target aeron_subscriber_zerocopy"
+.PHONY : subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/all
+
+# Build rule for subdir invocation for target.
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 8
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 0
+.PHONY : subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/rule
+
+# Convenience name for target.
+aeron_subscriber_zerocopy: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/rule
+.PHONY : aeron_subscriber_zerocopy
+
+# clean rule for target.
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/clean:
+	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/clean
+.PHONY : subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

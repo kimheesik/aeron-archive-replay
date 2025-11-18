@@ -130,12 +130,90 @@ aeron_subscriber/fast:
 	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/build
 .PHONY : aeron_subscriber/fast
 
+# Convenience name for target.
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/rule:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 subscriber/CMakeFiles/aeron_subscriber_monitored.dir/rule
+.PHONY : subscriber/CMakeFiles/aeron_subscriber_monitored.dir/rule
+
+# Convenience name for target.
+aeron_subscriber_monitored: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/rule
+.PHONY : aeron_subscriber_monitored
+
+# fast build rule for target.
+aeron_subscriber_monitored/fast:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build
+.PHONY : aeron_subscriber_monitored/fast
+
+# Convenience name for target.
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/rule:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/rule
+.PHONY : subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/rule
+
+# Convenience name for target.
+aeron_subscriber_zerocopy: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/rule
+.PHONY : aeron_subscriber_zerocopy
+
+# fast build rule for target.
+aeron_subscriber_zerocopy/fast:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build
+.PHONY : aeron_subscriber_zerocopy/fast
+
+__/subscriber_monitoring_example.o: __/subscriber_monitoring_example.cpp.o
+.PHONY : __/subscriber_monitoring_example.o
+
+# target to build an object file
+__/subscriber_monitoring_example.cpp.o:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.o
+.PHONY : __/subscriber_monitoring_example.cpp.o
+
+__/subscriber_monitoring_example.i: __/subscriber_monitoring_example.cpp.i
+.PHONY : __/subscriber_monitoring_example.i
+
+# target to preprocess a source file
+__/subscriber_monitoring_example.cpp.i:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.i
+.PHONY : __/subscriber_monitoring_example.cpp.i
+
+__/subscriber_monitoring_example.s: __/subscriber_monitoring_example.cpp.s
+.PHONY : __/subscriber_monitoring_example.s
+
+# target to generate assembly for a file
+__/subscriber_monitoring_example.cpp.s:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.s
+.PHONY : __/subscriber_monitoring_example.cpp.s
+
+__/subscriber_zerocopy_example.o: __/subscriber_zerocopy_example.cpp.o
+.PHONY : __/subscriber_zerocopy_example.o
+
+# target to build an object file
+__/subscriber_zerocopy_example.cpp.o:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.o
+.PHONY : __/subscriber_zerocopy_example.cpp.o
+
+__/subscriber_zerocopy_example.i: __/subscriber_zerocopy_example.cpp.i
+.PHONY : __/subscriber_zerocopy_example.i
+
+# target to preprocess a source file
+__/subscriber_zerocopy_example.cpp.i:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.i
+.PHONY : __/subscriber_zerocopy_example.cpp.i
+
+__/subscriber_zerocopy_example.s: __/subscriber_zerocopy_example.cpp.s
+.PHONY : __/subscriber_zerocopy_example.s
+
+# target to generate assembly for a file
+__/subscriber_zerocopy_example.cpp.s:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.s
+.PHONY : __/subscriber_zerocopy_example.cpp.s
+
 src/AeronSubscriber.o: src/AeronSubscriber.cpp.o
 .PHONY : src/AeronSubscriber.o
 
 # target to build an object file
 src/AeronSubscriber.cpp.o:
 	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/src/AeronSubscriber.cpp.o
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/AeronSubscriber.cpp.o
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/AeronSubscriber.cpp.o
 .PHONY : src/AeronSubscriber.cpp.o
 
 src/AeronSubscriber.i: src/AeronSubscriber.cpp.i
@@ -144,6 +222,8 @@ src/AeronSubscriber.i: src/AeronSubscriber.cpp.i
 # target to preprocess a source file
 src/AeronSubscriber.cpp.i:
 	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/src/AeronSubscriber.cpp.i
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/AeronSubscriber.cpp.i
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/AeronSubscriber.cpp.i
 .PHONY : src/AeronSubscriber.cpp.i
 
 src/AeronSubscriber.s: src/AeronSubscriber.cpp.s
@@ -152,7 +232,33 @@ src/AeronSubscriber.s: src/AeronSubscriber.cpp.s
 # target to generate assembly for a file
 src/AeronSubscriber.cpp.s:
 	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/src/AeronSubscriber.cpp.s
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/AeronSubscriber.cpp.s
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/AeronSubscriber.cpp.s
 .PHONY : src/AeronSubscriber.cpp.s
+
+src/MessageWorker.o: src/MessageWorker.cpp.o
+.PHONY : src/MessageWorker.o
+
+# target to build an object file
+src/MessageWorker.cpp.o:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o
+.PHONY : src/MessageWorker.cpp.o
+
+src/MessageWorker.i: src/MessageWorker.cpp.i
+.PHONY : src/MessageWorker.i
+
+# target to preprocess a source file
+src/MessageWorker.cpp.i:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.i
+.PHONY : src/MessageWorker.cpp.i
+
+src/MessageWorker.s: src/MessageWorker.cpp.s
+.PHONY : src/MessageWorker.s
+
+# target to generate assembly for a file
+src/MessageWorker.cpp.s:
+	cd /home/hesed/devel/aeron/build && $(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.s
+.PHONY : src/MessageWorker.cpp.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
@@ -187,9 +293,20 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... aeron_subscriber"
+	@echo "... aeron_subscriber_monitored"
+	@echo "... aeron_subscriber_zerocopy"
+	@echo "... __/subscriber_monitoring_example.o"
+	@echo "... __/subscriber_monitoring_example.i"
+	@echo "... __/subscriber_monitoring_example.s"
+	@echo "... __/subscriber_zerocopy_example.o"
+	@echo "... __/subscriber_zerocopy_example.i"
+	@echo "... __/subscriber_zerocopy_example.s"
 	@echo "... src/AeronSubscriber.o"
 	@echo "... src/AeronSubscriber.i"
 	@echo "... src/AeronSubscriber.s"
+	@echo "... src/MessageWorker.o"
+	@echo "... src/MessageWorker.i"
+	@echo "... src/MessageWorker.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

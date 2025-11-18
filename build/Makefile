@@ -155,6 +155,32 @@ aeron_subscriber/fast:
 	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/build
 .PHONY : aeron_subscriber/fast
 
+#=============================================================================
+# Target rules for targets named aeron_subscriber_monitored
+
+# Build rule for target.
+aeron_subscriber_monitored: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 aeron_subscriber_monitored
+.PHONY : aeron_subscriber_monitored
+
+# fast build rule for target.
+aeron_subscriber_monitored/fast:
+	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build
+.PHONY : aeron_subscriber_monitored/fast
+
+#=============================================================================
+# Target rules for targets named aeron_subscriber_zerocopy
+
+# Build rule for target.
+aeron_subscriber_zerocopy: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 aeron_subscriber_zerocopy
+.PHONY : aeron_subscriber_zerocopy
+
+# fast build rule for target.
+aeron_subscriber_zerocopy/fast:
+	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build
+.PHONY : aeron_subscriber_zerocopy/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -166,6 +192,8 @@ help:
 	@echo "... aeron_common"
 	@echo "... aeron_publisher"
 	@echo "... aeron_subscriber"
+	@echo "... aeron_subscriber_monitored"
+	@echo "... aeron_subscriber_zerocopy"
 .PHONY : help
 
 

@@ -112,26 +112,26 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: \
  /usr/include/c++/8/bits/atomic_base.h \
  /usr/include/c++/8/bits/atomic_lockfree_defines.h \
  /usr/include/c++/8/backward/auto_ptr.h /usr/include/c++/8/atomic \
- /home/hesed/aeron/include/Aeron.h \
- /home/hesed/aeron/include/ClientConductor.h /usr/include/c++/8/chrono \
- /usr/include/c++/8/ratio /usr/include/c++/8/ctime \
- /usr/include/c++/8/bits/parse_numbers.h /usr/include/c++/8/unordered_map \
- /usr/include/c++/8/bits/hashtable.h \
+ /usr/include/c++/8/functional /usr/include/c++/8/bits/std_function.h \
+ /usr/include/c++/8/unordered_map /usr/include/c++/8/bits/hashtable.h \
  /usr/include/c++/8/bits/hashtable_policy.h \
  /usr/include/c++/8/bits/node_handle.h /usr/include/c++/8/optional \
  /usr/include/c++/8/bits/enable_special_members.h \
  /usr/include/c++/8/bits/unordered_map.h /usr/include/c++/8/vector \
  /usr/include/c++/8/bits/stl_vector.h \
  /usr/include/c++/8/bits/stl_bvector.h /usr/include/c++/8/bits/vector.tcc \
- /usr/include/c++/8/mutex /usr/include/c++/8/system_error \
- /usr/include/c++/8/x86_64-redhat-linux/bits/error_constants.h \
- /usr/include/c++/8/bits/std_mutex.h \
- /home/hesed/aeron/include/util/LangUtil.h /usr/include/c++/8/functional \
- /usr/include/c++/8/bits/std_function.h \
  /usr/include/c++/8/bits/stl_algo.h \
  /usr/include/c++/8/bits/algorithmfwd.h \
  /usr/include/c++/8/bits/stl_heap.h \
- /usr/include/c++/8/bits/uniform_int_dist.h /usr/include/c++/8/algorithm \
+ /usr/include/c++/8/bits/uniform_int_dist.h \
+ /home/hesed/aeron/include/Aeron.h \
+ /home/hesed/aeron/include/ClientConductor.h /usr/include/c++/8/chrono \
+ /usr/include/c++/8/ratio /usr/include/c++/8/ctime \
+ /usr/include/c++/8/bits/parse_numbers.h /usr/include/c++/8/mutex \
+ /usr/include/c++/8/system_error \
+ /usr/include/c++/8/x86_64-redhat-linux/bits/error_constants.h \
+ /usr/include/c++/8/bits/std_mutex.h \
+ /home/hesed/aeron/include/util/LangUtil.h /usr/include/c++/8/algorithm \
  /home/hesed/aeron/include/util/ScopeUtils.h \
  /home/hesed/aeron/include/Publication.h \
  /home/hesed/aeron/include/concurrent/logbuffer/BufferClaim.h \
@@ -263,6 +263,11 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: \
  /home/hesed/aeron/include/client/RecordingSubscriptionDescriptorPoller.h \
  /home/hesed/aeron/include/concurrent/YieldingIdleStrategy.h \
  /home/hesed/aeron/include/AeronCounters.h \
+ /home/hesed/aeron/include/client/ReplayMerge.h \
+ /home/hesed/aeron/include/client/AeronArchive.h \
+ /home/hesed/devel/aeron/subscriber/include/BufferPool.h \
+ /home/hesed/devel/aeron/subscriber/include/MessageBuffer.h \
+ /home/hesed/devel/aeron/subscriber/include/MessageQueue.h \
  /home/hesed/devel/aeron/common/include/ConfigLoader.h \
  /usr/include/c++/8/map /usr/include/c++/8/bits/stl_tree.h \
  /usr/include/c++/8/bits/stl_map.h /usr/include/c++/8/bits/stl_multimap.h \
