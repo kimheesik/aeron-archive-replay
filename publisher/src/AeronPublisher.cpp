@@ -1,9 +1,11 @@
 #include "AeronPublisher.h"
 #include "AeronConfig.h"
+#include "MessageBuffer.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
 #include <cstring>
+#include <time.h>
 
 namespace aeron {
 namespace example {
@@ -159,21 +161,56 @@ bool AeronPublisher::isRecording() const {
 void AeronPublisher::run() {
     std::cout << "Publisher running. Type 'start' to begin recording, "
               << "'stop' to end recording, 'quit' to exit." << std::endl;
-    
+
     // 메시지 발행 스레드
     std::thread publish_thread([this]() {
-        int counter = 0;
+        uint64_t sequence_number = 0;
+        uint16_t publisher_id = 1;  // Publisher ID (can be configured)
+
         while (running_) {
-            char message[256];
-            auto now = std::chrono::system_clock::now().time_since_epoch();
-            auto timestamp = std::chrono::duration_cast<std::chrono::nanoseconds>(now).count();
-            
-            snprintf(message, sizeof(message), 
-                    "Message %d at %lld", 
-                    counter++, 
-                    timestamp);
-            
-            if (publish(reinterpret_cast<const uint8_t*>(message), strlen(message))) {
+            // Create message buffer
+            uint8_t buffer[sizeof(MessageHeader) + 256];  // Header + small payload
+            MessageHeader* header = reinterpret_cast<MessageHeader*>(buffer);
+
+            // Get timestamps
+            int64_t event_time = getCurrentTimeNanos();
+            int64_t publish_time = getCurrentTimeNanos();
+
+            // Initialize header
+            memset(header, 0, sizeof(MessageHeader));
+            header->setMagic();
+            header->version = 1;
+            header->message_type = MSG_TEST;  // Test message type
+            header->sequence_number = sequence_number++;
+            header->event_time_ns = event_time;
+            header->publish_time_ns = publish_time;
+            header->recv_time_ns = 0;  // Will be filled by subscriber
+            header->publisher_id = publisher_id;
+            header->priority = 128;  // Normal priority
+            header->flags = FLAG_NONE;
+            header->session_id = 1;
+            header->checksum = 0;  // Not using checksum for now
+            header->reserved = 0;
+
+            // Create payload (simple test data)
+            char* payload = reinterpret_cast<char*>(buffer + sizeof(MessageHeader));
+            int payload_length = snprintf(payload, 256,
+                "Test message %llu from Publisher",
+                (unsigned long long)sequence_number - 1);
+
+            // Set total message length
+            header->message_length = sizeof(MessageHeader) + payload_length;
+
+            // Calculate and set CRC32 checksum
+            header->flags |= FLAG_CHECKSUM_ENABLED;
+            header->checksum = calculateMessageCRC32(
+                header,
+                reinterpret_cast<const uint8_t*>(payload),
+                payload_length
+            );
+
+            // Publish the message
+            if (publish(buffer, header->message_length)) {
                 if (message_count_ % 1000 == 0) {
                     std::cout << "Published " << message_count_ << " messages. "
                               << "Recording: " << (isRecording() ? "ON" : "OFF") << std::endl;

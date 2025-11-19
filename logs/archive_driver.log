@@ -1,2 +1,6 @@
-WARNING: Existing errors saved to: /home/hesed/shm/aeron-2025-11-18-08-45-04-753+0000-error.log
-WARNING: existing errors saved to: /home/hesed/shm/aeron-archive/archive-2025-11-18-08-45-05-316+0000-error.log
+Exception in thread "main" io.aeron.driver.exceptions.ActiveDriverException: ERROR - active driver detected
+	at io.aeron.driver.MediaDriver.ensureDirectoryIsRecreated(MediaDriver.java:370)
+	at io.aeron.driver.MediaDriver.<init>(MediaDriver.java:123)
+	at io.aeron.driver.MediaDriver.launch(MediaDriver.java:259)
+	at io.aeron.archive.ArchivingMediaDriver.launch(ArchivingMediaDriver.java:85)
+	at io.aeron.archive.ArchivingMediaDriver.main(ArchivingMediaDriver.java:52)

@@ -264,4 +264,5 @@ publisher/CMakeFiles/aeron_publisher.dir/src/AeronPublisher.cpp.o: \
  /home/hesed/aeron/include/concurrent/YieldingIdleStrategy.h \
  /home/hesed/aeron/include/AeronCounters.h \
  /home/hesed/devel/aeron/publisher/include/RecordingController.h \
- /home/hesed/devel/aeron/common/include/AeronConfig.h
+ /home/hesed/devel/aeron/common/include/AeronConfig.h \
+ /home/hesed/devel/aeron/common/include/MessageBuffer.h

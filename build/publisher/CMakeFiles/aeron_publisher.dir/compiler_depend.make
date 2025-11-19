@@ -88,6 +88,7 @@ publisher/CMakeFiles/aeron_publisher.dir/src/AeronPublisher.cpp.o: /home/hesed/d
   /home/hesed/aeron/include/util/ScopeUtils.h \
   /home/hesed/aeron/include/util/StringUtil.h \
   /home/hesed/devel/aeron/common/include/AeronConfig.h \
+  /home/hesed/devel/aeron/common/include/MessageBuffer.h \
   /home/hesed/devel/aeron/publisher/include/AeronPublisher.h \
   /home/hesed/devel/aeron/publisher/include/RecordingController.h \
   /usr/include/alloca.h \
@@ -1107,6 +1108,8 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
 
 /usr/lib/gcc/x86_64-redhat-linux/8/include/stddef.h:
 
+/usr/lib/gcc/x86_64-redhat-linux/8/include/stdarg.h:
+
 /usr/include/c++/8/bits/atomic_lockfree_defines.h:
 
 /usr/include/c++/8/istream:
@@ -1126,8 +1129,6 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
 /usr/include/c++/8/bits/invoke.h:
 
 /usr/include/bits/typesizes.h:
-
-/usr/lib/gcc/x86_64-redhat-linux/8/include/stdarg.h:
 
 /usr/include/bits/types/wint_t.h:
 
@@ -1166,12 +1167,6 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
 /usr/include/bits/waitstatus.h:
 
 /usr/include/c++/8/bits/exception_ptr.h:
-
-/usr/include/bits/errno.h:
-
-/usr/include/c++/8/bits/locale_facets_nonio.tcc:
-
-/usr/include/bits/uio_lim.h:
 
 /usr/include/bits/stdint-intn.h:
 
@@ -1212,6 +1207,12 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
 /usr/include/asm-generic/errno-base.h:
 
 /usr/include/c++/8/bits/cpp_type_traits.h:
+
+/usr/include/bits/errno.h:
+
+/usr/include/c++/8/bits/locale_facets_nonio.tcc:
+
+/usr/include/bits/uio_lim.h:
 
 /home/hesed/aeron/include/ChannelUri.h:
 
@@ -1609,9 +1610,9 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
 
 /usr/include/c++/8/bits/parse_numbers.h:
 
-/usr/include/c++/8/bits/basic_string.h:
-
 /home/hesed/aeron/include/command/SubscriptionReadyFlyweight.h:
+
+/usr/include/c++/8/bits/basic_string.h:
 
 /usr/include/c++/8/ext/type_traits.h:
 
@@ -1732,6 +1733,8 @@ publisher/CMakeFiles/aeron_publisher.dir/src/main.cpp.o: /home/hesed/devel/aeron
 /usr/include/c++/8/type_traits:
 
 /usr/include/c++/8/x86_64-redhat-linux/bits/atomic_word.h:
+
+/home/hesed/devel/aeron/common/include/MessageBuffer.h:
 
 /home/hesed/aeron/include/concurrent/logbuffer/Header.h:
 

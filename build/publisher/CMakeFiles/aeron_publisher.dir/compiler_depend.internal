@@ -89,6 +89,7 @@ publisher/CMakeFiles/aeron_publisher.dir/src/AeronPublisher.cpp.o
  /home/hesed/aeron/include/util/ScopeUtils.h
  /home/hesed/aeron/include/util/StringUtil.h
  /home/hesed/devel/aeron/common/include/AeronConfig.h
+ /home/hesed/devel/aeron/common/include/MessageBuffer.h
  /home/hesed/devel/aeron/publisher/include/AeronPublisher.h
  /home/hesed/devel/aeron/publisher/include/RecordingController.h
  /usr/include/alloca.h
