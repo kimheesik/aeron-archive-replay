@@ -190,9 +190,34 @@ int main(int argc, char* argv[]) {
     aeron::example::AeronSubscriber subscriber(sub_config);
     g_subscriber = &subscriber;
 
+    // Enable checkpoint persistence
+    std::string checkpoint_file = sub_config.aeron_dir + "/subscriber.checkpoint";
+    subscriber.enableCheckpoint(checkpoint_file, 1);  // Flush every 1 second
+
     if (!subscriber.initialize()) {
         std::cerr << "Failed to initialize subscriber" << std::endl;
         return 1;
+    }
+
+    // Load checkpoint for restart (if exists)
+    aeron::example::CheckpointManager* checkpoint = subscriber.getCheckpointManager();
+    int64_t checkpoint_position = checkpoint ? checkpoint->getLastPosition() : 0;
+    int64_t checkpoint_sequence = checkpoint ? checkpoint->getLastSequence() : 0;
+
+    if (checkpoint_position > 0) {
+        std::cout << "\n========================================" << std::endl;
+        std::cout << "Checkpoint Found - Resuming from:" << std::endl;
+        std::cout << "========================================" << std::endl;
+        std::cout << "  Last sequence: " << checkpoint_sequence << std::endl;
+        std::cout << "  Last position: " << checkpoint_position << std::endl;
+        std::cout << "  Messages: " << (checkpoint ? checkpoint->getMessageCount() : 0) << std::endl;
+        std::cout << "========================================\n" << std::endl;
+
+        // Override start_position with checkpoint position
+        if (replay_auto_mode || replay_merge_mode) {
+            start_position = checkpoint_position;
+            std::cout << "Using checkpoint position for replay: " << start_position << std::endl;
+        }
     }
 
     // Start subscriber based on mode

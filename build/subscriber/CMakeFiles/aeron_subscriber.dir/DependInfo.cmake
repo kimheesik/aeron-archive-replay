@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/hesed/devel/aeron/subscriber/src/AeronSubscriber.cpp" "subscriber/CMakeFiles/aeron_subscriber.dir/src/AeronSubscriber.cpp.o" "gcc" "subscriber/CMakeFiles/aeron_subscriber.dir/src/AeronSubscriber.cpp.o.d"
+  "/home/hesed/devel/aeron/subscriber/src/CheckpointManager.cpp" "subscriber/CMakeFiles/aeron_subscriber.dir/src/CheckpointManager.cpp.o" "gcc" "subscriber/CMakeFiles/aeron_subscriber.dir/src/CheckpointManager.cpp.o.d"
   "/home/hesed/devel/aeron/subscriber/src/main.cpp" "subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o" "gcc" "subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o.d"
   )
 

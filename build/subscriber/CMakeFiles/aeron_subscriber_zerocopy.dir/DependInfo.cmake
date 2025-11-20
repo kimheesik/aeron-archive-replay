@@ -8,9 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/hesed/devel/aeron/subscriber_zerocopy_example.cpp" "subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.o" "gcc" "subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.o.d"
   "/home/hesed/devel/aeron/subscriber/src/AeronSubscriber.cpp" "subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/AeronSubscriber.cpp.o" "gcc" "subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/AeronSubscriber.cpp.o.d"
+  "/home/hesed/devel/aeron/subscriber/src/CheckpointManager.cpp" "subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.o" "gcc" "subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.o.d"
   "/home/hesed/devel/aeron/subscriber/src/MessageWorker.cpp" "subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o" "gcc" "subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o.d"
+  "/home/hesed/devel/aeron/subscriber/src/subscriber_zerocopy_example.cpp" "subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.o" "gcc" "subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

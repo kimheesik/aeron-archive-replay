@@ -268,4 +268,9 @@ subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/AeronSubscriber.cpp.o: 
  /home/hesed/devel/aeron/subscriber/include/BufferPool.h \
  /home/hesed/devel/aeron/subscriber/include/MessageBuffer.h \
  /home/hesed/devel/aeron/subscriber/include/MessageQueue.h \
+ /home/hesed/devel/aeron/subscriber/include/CheckpointManager.h \
+ /usr/include/c++/8/fstream \
+ /usr/include/c++/8/x86_64-redhat-linux/bits/basic_file.h \
+ /usr/include/c++/8/x86_64-redhat-linux/bits/c++io.h \
+ /usr/include/c++/8/bits/fstream.tcc \
  /home/hesed/devel/aeron/common/include/AeronConfig.h

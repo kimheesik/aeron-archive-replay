@@ -1,5 +1,5 @@
-subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: \
- /home/hesed/devel/aeron/subscriber/src/main.cpp \
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.o: \
+ /home/hesed/devel/aeron/subscriber/src/subscriber_monitoring_example.cpp \
  /usr/include/stdc-predef.h \
  /home/hesed/devel/aeron/subscriber/include/AeronSubscriber.h \
  /usr/include/c++/8/memory /usr/include/c++/8/bits/stl_algobase.h \
@@ -273,9 +273,7 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: \
  /usr/include/c++/8/x86_64-redhat-linux/bits/basic_file.h \
  /usr/include/c++/8/x86_64-redhat-linux/bits/c++io.h \
  /usr/include/c++/8/bits/fstream.tcc \
- /home/hesed/devel/aeron/common/include/ConfigLoader.h \
- /usr/include/c++/8/map /usr/include/c++/8/bits/stl_tree.h \
- /usr/include/c++/8/bits/stl_map.h /usr/include/c++/8/bits/stl_multimap.h \
+ /home/hesed/devel/aeron/subscriber/include/SPSCQueue.h \
  /usr/include/c++/8/csignal /usr/include/signal.h \
  /usr/include/bits/signum.h /usr/include/bits/signum-generic.h \
  /usr/include/bits/types/sig_atomic_t.h \
@@ -287,5 +285,4 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: \
  /usr/include/bits/sigcontext.h /usr/include/bits/types/stack_t.h \
  /usr/include/sys/ucontext.h /usr/include/bits/sigstack.h \
  /usr/include/bits/ss_flags.h /usr/include/bits/types/struct_sigstack.h \
- /usr/include/bits/sigthread.h /usr/include/getopt.h \
- /usr/include/bits/getopt_core.h /usr/include/bits/getopt_ext.h
+ /usr/include/bits/sigthread.h

@@ -188,12 +188,12 @@ publisher/CMakeFiles/aeron_publisher.dir/clean:
 subscriber/CMakeFiles/aeron_subscriber.dir/all: common/CMakeFiles/aeron_common.dir/all
 	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/depend
 	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber.dir/build.make subscriber/CMakeFiles/aeron_subscriber.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=9,10,11 "Built target aeron_subscriber"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=9,10,11,12 "Built target aeron_subscriber"
 .PHONY : subscriber/CMakeFiles/aeron_subscriber.dir/all
 
 # Build rule for subdir invocation for target.
 subscriber/CMakeFiles/aeron_subscriber.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 subscriber/CMakeFiles/aeron_subscriber.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 0
 .PHONY : subscriber/CMakeFiles/aeron_subscriber.dir/rule
@@ -214,12 +214,12 @@ subscriber/CMakeFiles/aeron_subscriber.dir/clean:
 subscriber/CMakeFiles/aeron_subscriber_monitored.dir/all: common/CMakeFiles/aeron_common.dir/all
 	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/depend
 	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=12,13,14 "Built target aeron_subscriber_monitored"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=13,14,15,16 "Built target aeron_subscriber_monitored"
 .PHONY : subscriber/CMakeFiles/aeron_subscriber_monitored.dir/all
 
 # Build rule for subdir invocation for target.
 subscriber/CMakeFiles/aeron_subscriber_monitored.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 subscriber/CMakeFiles/aeron_subscriber_monitored.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 0
 .PHONY : subscriber/CMakeFiles/aeron_subscriber_monitored.dir/rule
@@ -240,12 +240,12 @@ subscriber/CMakeFiles/aeron_subscriber_monitored.dir/clean:
 subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/all: common/CMakeFiles/aeron_common.dir/all
 	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/depend
 	$(MAKE) $(MAKESILENT) -f subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=15,16,17,18 "Built target aeron_subscriber_zerocopy"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=17,18,19,20,21 "Built target aeron_subscriber_zerocopy"
 .PHONY : subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/all
 
 # Build rule for subdir invocation for target.
 subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 8
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 9
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/hesed/devel/aeron/build/CMakeFiles 0
 .PHONY : subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/rule

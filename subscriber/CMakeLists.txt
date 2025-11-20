@@ -1,5 +1,6 @@
 add_executable(aeron_subscriber
     src/AeronSubscriber.cpp
+    src/CheckpointManager.cpp
     src/main.cpp
 )
 
@@ -17,7 +18,8 @@ target_link_libraries(aeron_subscriber
 # Monitoring example (separate executable for testing)
 add_executable(aeron_subscriber_monitored
     src/AeronSubscriber.cpp
-    ../subscriber_monitoring_example.cpp
+    src/CheckpointManager.cpp
+    src/subscriber_monitoring_example.cpp
 )
 
 target_include_directories(aeron_subscriber_monitored PRIVATE
@@ -34,8 +36,9 @@ target_link_libraries(aeron_subscriber_monitored
 # Zero-copy example (high-performance architecture)
 add_executable(aeron_subscriber_zerocopy
     src/AeronSubscriber.cpp
+    src/CheckpointManager.cpp
     src/MessageWorker.cpp
-    ../subscriber_zerocopy_example.cpp
+    src/subscriber_zerocopy_example.cpp
 )
 
 target_include_directories(aeron_subscriber_zerocopy PRIVATE

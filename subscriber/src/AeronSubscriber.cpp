@@ -88,6 +88,14 @@ AeronSubscriber::ZeroCopyStats AeronSubscriber::getZeroCopyStats() const {
     return stats;
 }
 
+void AeronSubscriber::enableCheckpoint(const std::string& file, int flush_interval_sec) {
+    checkpoint_ = std::make_unique<CheckpointManager>(file, flush_interval_sec);
+}
+
+CheckpointManager* AeronSubscriber::getCheckpointManager() const {
+    return checkpoint_.get();
+}
+
 bool AeronSubscriber::initialize() {
     try {
         std::cout << "Initializing Subscriber..." << std::endl;
@@ -402,7 +410,16 @@ void AeronSubscriber::handleMessageFastPath(
     // 5. Update statistics
     zc_messages_received_.fetch_add(1, std::memory_order_relaxed);
 
-    // Total time: ~660ns
+    // 6. Update checkpoint (if enabled) (~10ns)
+    if (checkpoint_) {
+        checkpoint_->update(
+            msg_buf->header.sequence_number,
+            position,
+            zc_messages_received_.load(std::memory_order_relaxed)
+        );
+    }
+
+    // Total time: ~670ns (checkpoint adds ~10ns)
     // Fast path complete - return to Aeron polling loop
 }
 
@@ -488,6 +505,11 @@ void AeronSubscriber::handleMessage(
             recv_timestamp,
             position
         );
+    }
+
+    // ⑦ Checkpoint 업데이트 (if enabled) (~10ns)
+    if (checkpoint_ && msg_number >= 0) {
+        checkpoint_->update(msg_number, position, message_count_);
     }
 }
 

@@ -83,34 +83,50 @@ subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/AeronSubscriber.cpp.s: 
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/aeron_subscriber_monitored.dir/src/AeronSubscriber.cpp.s"
 	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hesed/devel/aeron/subscriber/src/AeronSubscriber.cpp -o CMakeFiles/aeron_subscriber_monitored.dir/src/AeronSubscriber.cpp.s
 
-subscriber/CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.o: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/flags.make
-subscriber/CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.o: /home/hesed/devel/aeron/subscriber_monitoring_example.cpp
-subscriber/CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.o: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object subscriber/CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.o"
-	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT subscriber/CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.o -MF CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.o.d -o CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.o -c /home/hesed/devel/aeron/subscriber_monitoring_example.cpp
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.o: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/flags.make
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.o: /home/hesed/devel/aeron/subscriber/src/CheckpointManager.cpp
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.o: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.o"
+	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.o -MF CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.o.d -o CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.o -c /home/hesed/devel/aeron/subscriber/src/CheckpointManager.cpp
 
-subscriber/CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.i"
-	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hesed/devel/aeron/subscriber_monitoring_example.cpp > CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.i
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.i"
+	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hesed/devel/aeron/subscriber/src/CheckpointManager.cpp > CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.i
 
-subscriber/CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.s"
-	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hesed/devel/aeron/subscriber_monitoring_example.cpp -o CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.s
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.s"
+	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hesed/devel/aeron/subscriber/src/CheckpointManager.cpp -o CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.s
+
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.o: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/flags.make
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.o: /home/hesed/devel/aeron/subscriber/src/subscriber_monitoring_example.cpp
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.o: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.o"
+	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.o -MF CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.o.d -o CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.o -c /home/hesed/devel/aeron/subscriber/src/subscriber_monitoring_example.cpp
+
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.i"
+	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hesed/devel/aeron/subscriber/src/subscriber_monitoring_example.cpp > CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.i
+
+subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.s"
+	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hesed/devel/aeron/subscriber/src/subscriber_monitoring_example.cpp -o CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.s
 
 # Object files for target aeron_subscriber_monitored
 aeron_subscriber_monitored_OBJECTS = \
 "CMakeFiles/aeron_subscriber_monitored.dir/src/AeronSubscriber.cpp.o" \
-"CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.o"
+"CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.o" \
+"CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.o"
 
 # External object files for target aeron_subscriber_monitored
 aeron_subscriber_monitored_EXTERNAL_OBJECTS =
 
 subscriber/aeron_subscriber_monitored: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/AeronSubscriber.cpp.o
-subscriber/aeron_subscriber_monitored: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/__/subscriber_monitoring_example.cpp.o
+subscriber/aeron_subscriber_monitored: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/CheckpointManager.cpp.o
+subscriber/aeron_subscriber_monitored: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/src/subscriber_monitoring_example.cpp.o
 subscriber/aeron_subscriber_monitored: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/build.make
 subscriber/aeron_subscriber_monitored: common/libaeron_common.a
 subscriber/aeron_subscriber_monitored: subscriber/CMakeFiles/aeron_subscriber_monitored.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable aeron_subscriber_monitored"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable aeron_subscriber_monitored"
 	cd /home/hesed/devel/aeron/build/subscriber && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/aeron_subscriber_monitored.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

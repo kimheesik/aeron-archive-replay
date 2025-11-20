@@ -10,6 +10,7 @@
 #include "client/ReplayMerge.h"
 #include "BufferPool.h"
 #include "MessageQueue.h"
+#include "CheckpointManager.h"
 
 namespace aeron {
 namespace example {
@@ -103,6 +104,23 @@ public:
 
     ZeroCopyStats getZeroCopyStats() const;
 
+    /**
+     * Enable checkpoint persistence
+     *
+     * This enables automatic checkpoint saving with minimal overhead:
+     * - Main thread: ~10 ns per update (atomic stores only)
+     * - Background thread: Flushes to disk every N seconds
+     *
+     * @param file Checkpoint file path
+     * @param flush_interval_sec Flush interval in seconds (default: 1)
+     */
+    void enableCheckpoint(const std::string& file, int flush_interval_sec = 1);
+
+    /**
+     * Get checkpoint manager (for loading on restart)
+     */
+    CheckpointManager* getCheckpointManager() const;
+
     // Recording discovery helpers
     int64_t findLatestRecording(const std::string& channel, int32_t streamId);
     int64_t getRecordingStartPosition(int64_t recordingId);
@@ -147,6 +165,9 @@ private:
     std::atomic<uint64_t> zc_messages_received_;
     std::atomic<uint64_t> zc_buffer_allocation_failures_;
     std::atomic<uint64_t> zc_queue_full_failures_;
+
+    // Checkpoint manager (optional)
+    std::unique_ptr<CheckpointManager> checkpoint_;
 
     void handleMessage(const uint8_t* buffer, size_t length, int64_t position);
     void handleMessageFastPath(const uint8_t* buffer, size_t length, int64_t position);

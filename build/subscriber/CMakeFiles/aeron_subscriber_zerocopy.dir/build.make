@@ -83,10 +83,24 @@ subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/AeronSubscriber.cpp.s: c
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/aeron_subscriber_zerocopy.dir/src/AeronSubscriber.cpp.s"
 	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hesed/devel/aeron/subscriber/src/AeronSubscriber.cpp -o CMakeFiles/aeron_subscriber_zerocopy.dir/src/AeronSubscriber.cpp.s
 
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.o: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/flags.make
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.o: /home/hesed/devel/aeron/subscriber/src/CheckpointManager.cpp
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.o: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.o"
+	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.o -MF CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.o.d -o CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.o -c /home/hesed/devel/aeron/subscriber/src/CheckpointManager.cpp
+
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.i"
+	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hesed/devel/aeron/subscriber/src/CheckpointManager.cpp > CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.i
+
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.s"
+	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hesed/devel/aeron/subscriber/src/CheckpointManager.cpp -o CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.s
+
 subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/flags.make
 subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o: /home/hesed/devel/aeron/subscriber/src/MessageWorker.cpp
 subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o"
 	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o -MF CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o.d -o CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o -c /home/hesed/devel/aeron/subscriber/src/MessageWorker.cpp
 
 subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.i: cmake_force
@@ -97,36 +111,38 @@ subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.s: cma
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.s"
 	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hesed/devel/aeron/subscriber/src/MessageWorker.cpp -o CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.s
 
-subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.o: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/flags.make
-subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.o: /home/hesed/devel/aeron/subscriber_zerocopy_example.cpp
-subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.o: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.o"
-	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.o -MF CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.o.d -o CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.o -c /home/hesed/devel/aeron/subscriber_zerocopy_example.cpp
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.o: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/flags.make
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.o: /home/hesed/devel/aeron/subscriber/src/subscriber_zerocopy_example.cpp
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.o: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.o"
+	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.o -MF CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.o.d -o CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.o -c /home/hesed/devel/aeron/subscriber/src/subscriber_zerocopy_example.cpp
 
-subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.i"
-	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hesed/devel/aeron/subscriber_zerocopy_example.cpp > CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.i
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.i"
+	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hesed/devel/aeron/subscriber/src/subscriber_zerocopy_example.cpp > CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.i
 
-subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.s"
-	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hesed/devel/aeron/subscriber_zerocopy_example.cpp -o CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.s
+subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.s"
+	cd /home/hesed/devel/aeron/build/subscriber && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hesed/devel/aeron/subscriber/src/subscriber_zerocopy_example.cpp -o CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.s
 
 # Object files for target aeron_subscriber_zerocopy
 aeron_subscriber_zerocopy_OBJECTS = \
 "CMakeFiles/aeron_subscriber_zerocopy.dir/src/AeronSubscriber.cpp.o" \
+"CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.o" \
 "CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o" \
-"CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.o"
+"CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.o"
 
 # External object files for target aeron_subscriber_zerocopy
 aeron_subscriber_zerocopy_EXTERNAL_OBJECTS =
 
 subscriber/aeron_subscriber_zerocopy: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/AeronSubscriber.cpp.o
+subscriber/aeron_subscriber_zerocopy: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/CheckpointManager.cpp.o
 subscriber/aeron_subscriber_zerocopy: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o
-subscriber/aeron_subscriber_zerocopy: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/__/subscriber_zerocopy_example.cpp.o
+subscriber/aeron_subscriber_zerocopy: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/subscriber_zerocopy_example.cpp.o
 subscriber/aeron_subscriber_zerocopy: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/build.make
 subscriber/aeron_subscriber_zerocopy: common/libaeron_common.a
 subscriber/aeron_subscriber_zerocopy: subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable aeron_subscriber_zerocopy"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/hesed/devel/aeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable aeron_subscriber_zerocopy"
 	cd /home/hesed/devel/aeron/build/subscriber && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/aeron_subscriber_zerocopy.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
