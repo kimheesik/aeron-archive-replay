@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/aeron_subscriber.dir/src/AeronSubscriber.cpp.o.d"
   "CMakeFiles/aeron_subscriber.dir/src/CheckpointManager.cpp.o"
   "CMakeFiles/aeron_subscriber.dir/src/CheckpointManager.cpp.o.d"
+  "CMakeFiles/aeron_subscriber.dir/src/MessageWorker.cpp.o"
+  "CMakeFiles/aeron_subscriber.dir/src/MessageWorker.cpp.o.d"
   "CMakeFiles/aeron_subscriber.dir/src/main.cpp.o"
   "CMakeFiles/aeron_subscriber.dir/src/main.cpp.o.d"
   "aeron_subscriber"

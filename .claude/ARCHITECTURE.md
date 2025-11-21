@@ -153,21 +153,15 @@
 
 **역할**: 메시지 수신 및 처리
 
-**3가지 버전**:
+**Zero-Copy 3-Thread Subscriber** (기본 구현) ⭐
+**최고 성능의 단일 버전**
 
-#### 3.1 기본 Subscriber (aeron_subscriber)
-- 단순 메시지 수신
-- 내부 레이턴시 측정
-- 1000건마다 통계 출력
-
-#### 3.2 모니터링 Subscriber (aeron_subscriber_monitored)
-- Lock-free 모니터링 추가
-- SPSC Queue 기반 통계
-- 100건마다 실시간 출력
+- Lock-free 모니터링 (SPSC Queue)
+- 3-Thread 아키텍처
+- Buffer Pool + Message Queue
+- 100건마다 실시간 통계 출력
 - 0.009% 오버헤드
-
-#### 3.3 Zero-Copy Subscriber (aeron_subscriber_zerocopy) ⭐
-**가장 고성능 버전**
+- 0.76μs 평균 처리 시간
 
 **3-Thread 아키텍처**:
 

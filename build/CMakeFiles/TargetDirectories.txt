@@ -7,7 +7,5 @@
 /home/hesed/devel/aeron/build/publisher/CMakeFiles/edit_cache.dir
 /home/hesed/devel/aeron/build/publisher/CMakeFiles/rebuild_cache.dir
 /home/hesed/devel/aeron/build/subscriber/CMakeFiles/aeron_subscriber.dir
-/home/hesed/devel/aeron/build/subscriber/CMakeFiles/aeron_subscriber_monitored.dir
-/home/hesed/devel/aeron/build/subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir
 /home/hesed/devel/aeron/build/subscriber/CMakeFiles/edit_cache.dir
 /home/hesed/devel/aeron/build/subscriber/CMakeFiles/rebuild_cache.dir

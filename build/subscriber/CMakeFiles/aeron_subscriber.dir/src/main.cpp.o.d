@@ -273,6 +273,12 @@ subscriber/CMakeFiles/aeron_subscriber.dir/src/main.cpp.o: \
  /usr/include/c++/8/x86_64-redhat-linux/bits/basic_file.h \
  /usr/include/c++/8/x86_64-redhat-linux/bits/c++io.h \
  /usr/include/c++/8/bits/fstream.tcc \
+ /home/hesed/devel/aeron/subscriber/include/MessageWorker.h \
+ /home/hesed/devel/aeron/subscriber/include/SPSCQueue.h \
+ /usr/include/c++/8/unordered_set /usr/include/c++/8/bits/unordered_set.h \
+ /home/hesed/devel/aeron/subscriber/include/BufferPool.h \
+ /home/hesed/devel/aeron/subscriber/include/MessageQueue.h \
+ /home/hesed/devel/aeron/subscriber/include/SPSCQueue.h \
  /home/hesed/devel/aeron/common/include/ConfigLoader.h \
  /usr/include/c++/8/map /usr/include/c++/8/bits/stl_tree.h \
  /usr/include/c++/8/bits/stl_map.h /usr/include/c++/8/bits/stl_multimap.h \

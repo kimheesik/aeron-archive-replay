@@ -1,17 +1,45 @@
+/**
+ * Zero-Copy Subscriber (Main)
+ *
+ * 고성능 zero-copy 아키텍처:
+ * - Subscriber Thread: Aeron 수신만 담당 (< 1μs/msg)
+ * - Worker Thread: 메시지 처리 (검증, 중복 제거, 비즈니스 로직)
+ * - Monitoring Thread: 통계 출력 (100건마다)
+ *
+ * 특징:
+ * - Buffer Pool: 사전 할당된 버퍼 (malloc/free 제거)
+ * - Message Queue: 포인터 전달 (데이터 복사 없음)
+ * - Lock-free: 모든 큐와 풀은 lock-free
+ * - 3-Thread 구조: 완전 독립적 처리
+ *
+ * Usage:
+ *   ./aeron_subscriber
+ *   ./aeron_subscriber --replay-auto
+ *   ./aeron_subscriber --config config/aeron-local.ini --replay-auto
+ */
+
 #include "AeronSubscriber.h"
+#include "MessageWorker.h"
+#include "BufferPool.h"
+#include "MessageQueue.h"
+#include "SPSCQueue.h"
 #include "ConfigLoader.h"
 #include <iostream>
+#include <thread>
+#include <atomic>
 #include <csignal>
-#include <cstring>
+#include <iomanip>
 #include <getopt.h>
 
-static aeron::example::AeronSubscriber* g_subscriber = nullptr;
+using namespace aeron::example;
 
+// Global shutdown flag
+static std::atomic<bool> g_running{true};
+
+// Signal handler
 void signalHandler(int signal) {
-    std::cout << "\nReceived signal " << signal << std::endl;
-    if (g_subscriber) {
-        g_subscriber->shutdown();
-    }
+    std::cout << "\n\nReceived signal " << signal << ", shutting down..." << std::endl;
+    g_running.store(false);
 }
 
 void printUsage(const char* program_name) {
@@ -20,55 +48,64 @@ void printUsage(const char* program_name) {
               << "  --config <file>                 Load configuration from INI file\n"
               << "  --aeron-dir <path>              Aeron directory (override config)\n"
               << "  --archive-control <channel>     Archive control channel (override config)\n"
-              << "  --replay-merge <recording_id>   Start ReplayMerge from specific recording ID\n"
               << "  --replay-auto                   Auto-discover latest recording and replay\n"
               << "  --position <pos>                Start position for ReplayMerge (default: 0)\n"
               << "  --print-config                  Print current configuration and exit\n"
+              << "\nGap Recovery Options (온프레미스 최적화):\n"
+              << "  --no-gap-recovery               Disable gap recovery (default: enabled)\n"
+              << "  --gap-tolerance <N>             Max gaps to recover immediately (default: 5)\n"
+              << "  --no-duplicate-check            Disable duplicate checking (default: enabled)\n"
+              << "  --duplicate-window <N>          Duplicate check window size (default: 1000)\n"
+              << "\n"
               << "  -h, --help                      Show this help message\n"
               << "\nNOTE: External MediaDriver (aeronmd) must be running before starting subscriber\n"
               << "\nExamples:\n"
-              << "  # Live mode (default)\n"
-              << "  " << program_name << " --config config/aeron-local.ini\n"
+              << "  # Live mode (default with gap recovery)\n"
+              << "  " << program_name << "\n"
+              << "\n"
+              << "  # Live mode with gap recovery disabled (maximum performance)\n"
+              << "  " << program_name << " --no-gap-recovery --no-duplicate-check\n"
               << "\n"
               << "  # Auto-discover latest recording and replay from start\n"
-              << "  " << program_name << " --config config/aeron-local.ini --replay-auto\n"
+              << "  " << program_name << " --replay-auto\n"
               << "\n"
-              << "  # Auto-discover with custom start position\n"
-              << "  " << program_name << " --config config/aeron-local.ini --replay-auto --position 1000\n"
-              << "\n"
-              << "  # Manual ReplayMerge with specific recording ID\n"
-              << "  " << program_name << " --config config/aeron-local.ini --replay-merge 1\n"
-              << "\n"
-              << "  # Distributed subscriber connecting to remote Publisher archive\n"
-              << "  " << program_name << " --config config/aeron-distributed.ini --archive-control aeron:udp?endpoint=192.168.1.10:8010 --replay-auto\n"
+              << "  # Custom gap recovery settings\n"
+              << "  " << program_name << " --gap-tolerance 10 --duplicate-window 2000\n"
               << std::endl;
 }
 
-int main(int argc, char* argv[]) {
-    signal(SIGINT, signalHandler);
-    signal(SIGTERM, signalHandler);
+int main(int argc, char** argv) {
+    // Register signal handlers
+    std::signal(SIGINT, signalHandler);
+    std::signal(SIGTERM, signalHandler);
 
-    // 1. Config 로딩 (INI 파일 또는 기본값)
+    // CLI argument parsing
     std::string config_file;
     bool print_config_only = false;
-    bool replay_merge_mode = false;
-    bool replay_auto_mode = false;   // NEW: Auto-discovery mode
-    int64_t recording_id = -1;
+    bool replay_auto_mode = false;
     int64_t start_position = 0;
-
-    // CLI 옵션으로 override할 값들
     std::string override_aeron_dir;
     std::string override_archive_control;
 
-    // 커맨드라인 옵션 정의
+    // Gap recovery overrides
+    bool gap_recovery_override = false;
+    bool gap_recovery_enabled = true;  // default: enabled
+    bool duplicate_check_override = false;
+    bool duplicate_check_enabled = true;  // default: enabled
+    int64_t gap_tolerance_override = -1;
+    int64_t duplicate_window_override = -1;
+
     static struct option long_options[] = {
         {"config",           required_argument, 0, 'f'},
         {"aeron-dir",        required_argument, 0, 'a'},
         {"archive-control",  required_argument, 0, 'c'},
-        {"replay-merge",     required_argument, 0, 'r'},
-        {"replay-auto",      no_argument,       0, 'R'},  // NEW
+        {"replay-auto",      no_argument,       0, 'R'},
         {"position",         required_argument, 0, 'p'},
         {"print-config",     no_argument,       0, 'P'},
+        {"no-gap-recovery",  no_argument,       0, 'G'},
+        {"gap-tolerance",    required_argument, 0, 'T'},
+        {"no-duplicate-check", no_argument,     0, 'D'},
+        {"duplicate-window", required_argument, 0, 'W'},
         {"help",             no_argument,       0, 'h'},
         {0, 0, 0, 0}
     };
@@ -87,11 +124,7 @@ int main(int argc, char* argv[]) {
             case 'c':
                 override_archive_control = optarg;
                 break;
-            case 'r':
-                replay_merge_mode = true;
-                recording_id = std::stoll(optarg);
-                break;
-            case 'R':  // NEW: Auto-discovery
+            case 'R':
                 replay_auto_mode = true;
                 break;
             case 'p':
@@ -99,6 +132,20 @@ int main(int argc, char* argv[]) {
                 break;
             case 'P':
                 print_config_only = true;
+                break;
+            case 'G':
+                gap_recovery_override = true;
+                gap_recovery_enabled = false;
+                break;
+            case 'T':
+                gap_tolerance_override = std::stoll(optarg);
+                break;
+            case 'D':
+                duplicate_check_override = true;
+                duplicate_check_enabled = false;
+                break;
+            case 'W':
+                duplicate_window_override = std::stoll(optarg);
                 break;
             case 'h':
                 printUsage(argv[0]);
@@ -109,139 +156,317 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // Validate options
-    if (replay_merge_mode && replay_auto_mode) {
-        std::cerr << "Error: Cannot use both --replay-merge and --replay-auto\n" << std::endl;
-        printUsage(argv[0]);
-        return 1;
-    }
-
-    // 2. Config 로드
-    aeron::example::AeronSettings aeron_settings;
-
+    // Load configuration
+    AeronSettings aeron_settings;
     try {
         if (!config_file.empty()) {
-            // Config 파일에서 로드
-            aeron_settings = aeron::example::ConfigLoader::loadFromFile(config_file);
+            aeron_settings = ConfigLoader::loadFromFile(config_file);
         } else {
-            // 기본값 사용 (AeronConfig.h)
-            std::cout << "Using default configuration (AeronConfig.h)" << std::endl;
-            aeron_settings = aeron::example::ConfigLoader::loadDefault();
+            aeron_settings = ConfigLoader::loadDefault();
         }
     } catch (const std::exception& e) {
         std::cerr << "Failed to load configuration: " << e.what() << std::endl;
         return 1;
     }
 
-    // 3. CLI 옵션으로 override
+    // Apply CLI overrides
     if (!override_aeron_dir.empty()) {
         aeron_settings.aeron_dir = override_aeron_dir;
-        std::cout << "Override: aeron_dir = " << override_aeron_dir << std::endl;
     }
     if (!override_archive_control.empty()) {
         aeron_settings.archive_control_request_channel = override_archive_control;
-        std::cout << "Override: archive_control = " << override_archive_control << std::endl;
     }
 
-    // 4. Config 출력 모드
+    // Print config mode
     if (print_config_only) {
         aeron_settings.print();
         return 0;
     }
 
-    // 5. SubscriberConfig에 적용
-    aeron::example::SubscriberConfig sub_config;
-    sub_config.aeron_dir = aeron_settings.aeron_dir;
-    sub_config.archive_control_channel = aeron_settings.archive_control_request_channel;
-    sub_config.subscription_channel = aeron_settings.subscription_channel;
-    sub_config.subscription_stream_id = aeron_settings.subscription_stream_id;
-    sub_config.replay_destination = aeron_settings.replay_channel;
-
-    // 설정 요약 출력
-    std::cout << "========================================" << std::endl;
-    std::cout << "Subscriber Configuration" << std::endl;
-    std::cout << "========================================" << std::endl;
-    std::cout << "Aeron directory: " << sub_config.aeron_dir << std::endl;
-    std::cout << "MediaDriver: External (must be running separately)" << std::endl;
-    std::cout << "Archive control: " << sub_config.archive_control_channel << std::endl;
-    std::cout << "Subscription channel: " << sub_config.subscription_channel << std::endl;
-
-    // Display mode
-    std::string mode_str = "LIVE";
+    std::cout << "\n==========================================" << std::endl;
+    std::cout << "    ZERO-COPY SUBSCRIBER (Default)" << std::endl;
+    std::cout << "==========================================" << std::endl;
     if (replay_auto_mode) {
-        mode_str = "REPLAY_AUTO (auto-discovery)";
-    } else if (replay_merge_mode) {
-        mode_str = "REPLAY_MERGE";
+        std::cout << "Mode: REPLAY_AUTO → Live" << std::endl;
+    } else {
+        std::cout << "Mode: LIVE" << std::endl;
     }
-    std::cout << "Mode: " << mode_str << std::endl;
+    std::cout << "Config: " << (config_file.empty() ? "Default" : config_file) << std::endl;
+    std::cout << "==========================================\n" << std::endl;
 
-    if (replay_merge_mode) {
-        std::cout << "Recording ID: " << recording_id << std::endl;
-        std::cout << "Start position: " << start_position << std::endl;
-        std::cout << "Replay destination: " << sub_config.replay_destination << std::endl;
-    } else if (replay_auto_mode) {
-        std::cout << "Auto-discovery: ENABLED" << std::endl;
-        std::cout << "Start position: " << start_position << std::endl;
-        std::cout << "Replay destination: " << sub_config.replay_destination << std::endl;
+    // ============================================
+    // 1. Create Buffer Pool (사전 할당)
+    // ============================================
+    std::cout << "Creating Buffer Pool..." << std::endl;
+    MessageBufferPool buffer_pool;  // 1024 buffers (~4.2 MB)
+
+    // ============================================
+    // 2. Create Message Queue (zero-copy)
+    // ============================================
+    std::cout << "Creating Message Queue..." << std::endl;
+    MessageBufferQueue message_queue;  // 4096 slots (~32 KB)
+
+    // ============================================
+    // 3. Create Monitoring Queue
+    // ============================================
+    std::cout << "Creating Monitoring Queue..." << std::endl;
+    MessageStatsQueue stats_queue;  // 16384 items (~512 KB)
+
+    // ============================================
+    // 4. Create Monitoring Thread
+    // ============================================
+    std::cout << "Starting Monitoring Thread..." << std::endl;
+    std::atomic<bool> monitoring_running{true};
+    std::atomic<int64_t> skipped_count{0};
+
+    std::thread monitor_thread([&]() {
+        int64_t counter = 0;
+        int64_t total_latency_us = 0;
+        int64_t min_latency_us = INT64_MAX;
+        int64_t max_latency_us = 0;
+
+        MessageStats stats;
+
+        while (monitoring_running.load(std::memory_order_relaxed)) {
+            if (stats_queue.dequeue(stats)) {
+                counter++;
+
+                // Calculate latency
+                double latency = stats.latency_us();
+                if (latency > 0) {
+                    total_latency_us += static_cast<int64_t>(latency);
+                    min_latency_us = std::min(min_latency_us, static_cast<int64_t>(latency));
+                    max_latency_us = std::max(max_latency_us, static_cast<int64_t>(latency));
+                }
+
+                // Print every 100 messages
+                if (counter % 100 == 0) {
+                    double avg_latency = counter > 0 ?
+                        static_cast<double>(total_latency_us) / counter : 0.0;
+
+                    std::cout << "\n==========================================" << std::endl;
+                    std::cout << "📊 Zero-Copy Stats (last 100 messages)" << std::endl;
+                    std::cout << "==========================================" << std::endl;
+                    std::cout << "Total messages:   " << counter << std::endl;
+                    std::cout << "Latest message:   #" << stats.message_number << std::endl;
+
+                    if (avg_latency > 0) {
+                        std::cout << std::fixed << std::setprecision(2);
+                        std::cout << "Avg latency:      " << avg_latency << " μs" << std::endl;
+                        std::cout << "Min latency:      " << min_latency_us << " μs" << std::endl;
+                        std::cout << "Max latency:      " << max_latency_us << " μs" << std::endl;
+                    }
+
+                    // Buffer pool and queue stats
+                    std::cout << "\nResource Usage:" << std::endl;
+                    std::cout << "Buffer pool:      " << buffer_pool.available()
+                              << " / " << buffer_pool.capacity()
+                              << " (util: " << std::fixed << std::setprecision(1)
+                              << (buffer_pool.utilization() * 100.0) << "%)" << std::endl;
+
+                    std::cout << "Message queue:    " << message_queue.size()
+                              << " / " << message_queue.capacity()
+                              << " (util: " << std::fixed << std::setprecision(1)
+                              << (message_queue.utilization() * 100.0) << "%)" << std::endl;
+
+                    std::cout << "Stats queue:      " << stats_queue.size()
+                              << " / " << stats_queue.capacity() << std::endl;
+
+                    int64_t skipped = skipped_count.load(std::memory_order_relaxed);
+                    if (skipped > 0) {
+                        std::cout << "⚠️  Skipped:        " << skipped << " messages" << std::endl;
+                    }
+
+                    std::cout << "==========================================\n" << std::endl;
+                }
+            } else {
+                // Queue empty - wait briefly
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+        }
+
+        std::cout << "✓ Monitoring thread stopped (total: " << counter << " messages)" << std::endl;
+    });
+
+    // ============================================
+    // 5. Create Worker Thread
+    // ============================================
+    std::cout << "Creating Message Worker..." << std::endl;
+    MessageWorker worker(message_queue, buffer_pool, stats_queue);
+
+    std::cout << "Starting Worker Thread..." << std::endl;
+    worker.start();
+
+    // ============================================
+    // 6. Create and Initialize Subscriber
+    // ============================================
+    std::cout << "Initializing Subscriber..." << std::endl;
+
+    SubscriberConfig config;
+    config.aeron_dir = aeron_settings.aeron_dir;
+    config.archive_control_channel = aeron_settings.archive_control_request_channel;
+    config.subscription_channel = aeron_settings.subscription_channel;
+    config.subscription_stream_id = aeron_settings.subscription_stream_id;
+    config.replay_destination = aeron_settings.replay_channel;
+
+    // Apply gap recovery CLI overrides
+    if (gap_recovery_override) {
+        config.gap_recovery_enabled = gap_recovery_enabled;
     }
-    std::cout << "========================================\n" << std::endl;
+    if (duplicate_check_override) {
+        config.duplicate_check_enabled = duplicate_check_enabled;
+    }
+    if (gap_tolerance_override > 0) {
+        config.max_gap_tolerance = gap_tolerance_override;
+    }
+    if (duplicate_window_override > 0) {
+        config.duplicate_window_size = duplicate_window_override;
+    }
 
-    // 6. Subscriber 생성 및 실행
-    aeron::example::AeronSubscriber subscriber(sub_config);
-    g_subscriber = &subscriber;
+    // Display gap recovery configuration
+    std::cout << "\n--- Gap Recovery Configuration ---" << std::endl;
+    std::cout << "Gap Recovery: " << (config.gap_recovery_enabled ? "ENABLED" : "DISABLED");
+    if (config.gap_recovery_enabled) {
+        std::cout << " (tolerance: " << config.max_gap_tolerance << ")";
+    }
+    std::cout << std::endl;
 
-    // Enable checkpoint persistence
-    std::string checkpoint_file = sub_config.aeron_dir + "/subscriber.checkpoint";
-    subscriber.enableCheckpoint(checkpoint_file, 1);  // Flush every 1 second
+    std::cout << "Duplicate Check: " << (config.duplicate_check_enabled ? "ENABLED" : "DISABLED");
+    if (config.duplicate_check_enabled) {
+        std::cout << " (window: " << config.duplicate_window_size << ")";
+    }
+    std::cout << std::endl;
+    std::cout << "-----------------------------------\n" << std::endl;
+
+    AeronSubscriber subscriber(config);
 
     if (!subscriber.initialize()) {
         std::cerr << "Failed to initialize subscriber" << std::endl;
+        monitoring_running = false;
+        monitor_thread.join();
+        worker.stop();
         return 1;
     }
 
+    // ============================================
+    // 7. Initialize Zero-Copy (REQUIRED)
+    // ============================================
+    std::cout << "Initializing Zero-Copy..." << std::endl;
+    subscriber.initializeZeroCopy(&buffer_pool, &message_queue);
+
+    // ============================================
+    // 8. Enable Checkpoint
+    // ============================================
+    std::string checkpoint_file = config.aeron_dir + "/subscriber.checkpoint";
+    subscriber.enableCheckpoint(checkpoint_file, 1);  // Flush every 1 second
+
     // Load checkpoint for restart (if exists)
-    aeron::example::CheckpointManager* checkpoint = subscriber.getCheckpointManager();
+    CheckpointManager* checkpoint = subscriber.getCheckpointManager();
     int64_t checkpoint_position = checkpoint ? checkpoint->getLastPosition() : 0;
-    int64_t checkpoint_sequence = checkpoint ? checkpoint->getLastSequence() : 0;
 
     if (checkpoint_position > 0) {
-        std::cout << "\n========================================" << std::endl;
-        std::cout << "Checkpoint Found - Resuming from:" << std::endl;
-        std::cout << "========================================" << std::endl;
-        std::cout << "  Last sequence: " << checkpoint_sequence << std::endl;
-        std::cout << "  Last position: " << checkpoint_position << std::endl;
-        std::cout << "  Messages: " << (checkpoint ? checkpoint->getMessageCount() : 0) << std::endl;
-        std::cout << "========================================\n" << std::endl;
-
-        // Override start_position with checkpoint position
-        if (replay_auto_mode || replay_merge_mode) {
+        std::cout << "✓ Checkpoint found - resuming from position: " << checkpoint_position << std::endl;
+        if (replay_auto_mode) {
             start_position = checkpoint_position;
-            std::cout << "Using checkpoint position for replay: " << start_position << std::endl;
         }
     }
 
-    // Start subscriber based on mode
+    // ============================================
+    // 9. Start Live or ReplayMerge
+    // ============================================
     if (replay_auto_mode) {
-        // Auto-discovery mode
+        std::cout << "\nStarting ReplayMerge Auto mode..." << std::endl;
         if (!subscriber.startReplayMergeAuto(start_position)) {
-            std::cerr << "Failed to start ReplayMerge with auto-discovery" << std::endl;
-            return 1;
-        }
-    } else if (replay_merge_mode) {
-        // Manual recording ID mode
-        if (!subscriber.startReplayMerge(recording_id, start_position)) {
-            std::cerr << "Failed to start ReplayMerge" << std::endl;
-            return 1;
+            std::cerr << "Failed to start ReplayMerge (falling back to Live)" << std::endl;
+            if (!subscriber.startLive()) {
+                std::cerr << "Failed to start live mode" << std::endl;
+                monitoring_running = false;
+                monitor_thread.join();
+                worker.stop();
+                return 1;
+            }
         }
     } else {
-        // Live mode
+        std::cout << "\nStarting Live mode..." << std::endl;
         if (!subscriber.startLive()) {
-            std::cerr << "Failed to start live" << std::endl;
+            std::cerr << "Failed to start live mode" << std::endl;
+            monitoring_running = false;
+            monitor_thread.join();
+            worker.stop();
             return 1;
         }
     }
 
-    subscriber.run();
+    std::cout << "\n==========================================" << std::endl;
+    std::cout << "  ✓ Zero-Copy Subscriber Running" << std::endl;
+    std::cout << "  • Subscriber Thread: Aeron reception" << std::endl;
+    std::cout << "  • Worker Thread: Message processing" << std::endl;
+    std::cout << "  • Monitoring Thread: Statistics" << std::endl;
+    std::cout << "==========================================" << std::endl;
+    std::cout << "\nPress Ctrl+C to stop...\n" << std::endl;
+
+    // ============================================
+    // 10. Run Subscriber in separate thread
+    // ============================================
+    std::thread subscriber_thread([&]() {
+        subscriber.run();
+    });
+
+    // ============================================
+    // 11. Main thread waits for shutdown signal
+    // ============================================
+    while (g_running.load()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    // ============================================
+    // 12. Graceful Shutdown
+    // ============================================
+    std::cout << "\n===========================================" << std::endl;
+    std::cout << "  Shutting down..." << std::endl;
+    std::cout << "===========================================" << std::endl;
+
+    // Stop subscriber
+    std::cout << "1. Stopping subscriber..." << std::endl;
+    subscriber.shutdown();
+    subscriber_thread.join();
+
+    // Stop worker
+    std::cout << "2. Stopping worker thread..." << std::endl;
+    worker.stop();
+
+    // Stop monitoring
+    std::cout << "3. Stopping monitoring thread..." << std::endl;
+    monitoring_running = false;
+    monitor_thread.join();
+
+    // ============================================
+    // 13. Print Final Statistics
+    // ============================================
+    std::cout << "\n==========================================" << std::endl;
+    std::cout << "  Final Statistics" << std::endl;
+    std::cout << "==========================================" << std::endl;
+
+    // Zero-copy stats
+    auto zc_stats = subscriber.getZeroCopyStats();
+    std::cout << "\nZero-Copy Subscriber:" << std::endl;
+    std::cout << "  Messages received:     " << zc_stats.messages_received << std::endl;
+    std::cout << "  Buffer alloc failures: " << zc_stats.buffer_allocation_failures << std::endl;
+    std::cout << "  Queue full failures:   " << zc_stats.queue_full_failures << std::endl;
+
+    // Worker stats
+    std::cout << "\nWorker Thread:" << std::endl;
+    worker.printStatistics();
+
+    // Buffer pool stats
+    buffer_pool.printStatistics();
+
+    // Message queue stats
+    message_queue.printStatistics();
+
+    std::cout << "\n==========================================" << std::endl;
+    std::cout << "  ✓ Zero-Copy Subscriber Shutdown Complete" << std::endl;
+    std::cout << "==========================================" << std::endl;
 
     return 0;
 }

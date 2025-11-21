@@ -142,24 +142,24 @@ Interactive commands:
 - `stop` - Stop recording
 - `quit` - Exit publisher
 
-### Starting Subscriber
+### Starting Subscriber (Zero-Copy Architecture)
 
-**IMPORTANT**: Subscriber now ALWAYS uses embedded MediaDriver (mandatory).
+**NEW**: Subscriber now uses zero-copy 3-thread architecture by default for maximum performance.
 
 **Live mode** (receive real-time messages):
 ```bash
 cd /home/hesed/devel/aeron/build
-./subscriber/aeron_subscriber --config ../config/aeron-local.ini
+./subscriber/aeron_subscriber
 ```
 
 **ReplayMerge mode with auto-discovery** (finds latest recording automatically):
 ```bash
-./subscriber/aeron_subscriber --config ../config/aeron-local.ini --replay-auto
+./subscriber/aeron_subscriber --replay-auto
 ```
 
-**ReplayMerge mode with specific recording ID**:
+**With custom config**:
 ```bash
-./subscriber/aeron_subscriber --config ../config/aeron-local.ini --replay-merge 1 --position 0
+./subscriber/aeron_subscriber --config ../config/aeron-local.ini --replay-auto
 ```
 
 **Advanced**: Auto-discovery with custom start position:

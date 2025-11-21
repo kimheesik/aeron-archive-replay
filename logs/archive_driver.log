@@ -1,6 +1,1 @@
-Exception in thread "main" io.aeron.driver.exceptions.ActiveDriverException: ERROR - active driver detected
-	at io.aeron.driver.MediaDriver.ensureDirectoryIsRecreated(MediaDriver.java:370)
-	at io.aeron.driver.MediaDriver.<init>(MediaDriver.java:123)
-	at io.aeron.driver.MediaDriver.launch(MediaDriver.java:259)
-	at io.aeron.archive.ArchivingMediaDriver.launch(ArchivingMediaDriver.java:85)
-	at io.aeron.archive.ArchivingMediaDriver.main(ArchivingMediaDriver.java:52)
+Picked up JAVA_TOOL_OPTIONS: --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED

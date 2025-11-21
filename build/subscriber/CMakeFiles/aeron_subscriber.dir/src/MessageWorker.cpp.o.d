@@ -1,4 +1,4 @@
-subscriber/CMakeFiles/aeron_subscriber_zerocopy.dir/src/MessageWorker.cpp.o: \
+subscriber/CMakeFiles/aeron_subscriber.dir/src/MessageWorker.cpp.o: \
  /home/hesed/devel/aeron/subscriber/src/MessageWorker.cpp \
  /usr/include/stdc-predef.h \
  /home/hesed/devel/aeron/subscriber/include/MessageWorker.h \
